@@ -1,63 +1,35 @@
 # BaseLock 🔒
 
-**Monetize your links on Base L2.**
+**Monetize your digital content on Base L2.**
 
-BaseLock allows you to create token-gated links that can only be unlocked by paying a specific amount of ETH. Built for the Base ecosystem.
+BaseLock is the simplest way to sell access to files, links, or secret content using crypto. No sign-ups, no monthly fees—just connect your wallet and start selling.
 
 ![BaseLock UI](https://github.com/AdnanHimself/baselock/assets/placeholder/ui-preview.png)
 
-## Features
+## How It Works
 
-- **Create Locked Links**: Easily generate a short link for your secret content (Dropbox, Google Drive, etc.).
-- **Set Your Price**: Define how much ETH users need to pay to access the content.
-- **Crypto Payments**: Seamless integration with RainbowKit and Wagmi for wallet connection and payments.
-- **Base L2 Native**: Optimized for low fees and fast transactions on the Base network.
-- **Polished UI**: Modern, flat design with a "Base Blue" aesthetic.
+### 1. Create a Lock 🛠️
+Have a file on Dropbox, a Google Doc, or a secret link you want to sell?
+1.  **Connect your Wallet** (we support MetaMask, Rainbow, Coinbase Wallet, and more).
+2.  **Paste your Link**: This is the secret content users will pay to see.
+3.  **Set a Price**: Choose how much ETH you want to charge.
+4.  **Click Create**: We generate a unique, secure link for you.
 
-## Tech Stack
+### 2. Share & Earn 💸
+Copy your unique **BaseLock Link** and share it anywhere:
+-   Twitter / X
+-   Discord Communities
+-   Telegram Groups
+-   Email Newsletters
 
-- **Framework**: [Next.js 16](https://nextjs.org/) (App Router)
-- **Styling**: [Tailwind CSS](https://tailwindcss.com/)
-- **Web3**: [RainbowKit](https://www.rainbowkit.com/), [Wagmi](https://wagmi.sh/), [Viem](https://viem.sh/)
-- **Database**: [Supabase](https://supabase.com/)
-- **Smart Contract**: Solidity (Base Mainnet)
+### 3. Users Pay to Unlock 🔓
+When someone clicks your link:
+1.  They see your public title and price.
+2.  They click **"Pay to Unlock"**.
+3.  The ETH is sent **directly to your wallet** via the Base blockchain.
+4.  Once the payment is verified, the secret link is instantly revealed to them.
 
-## Getting Started
+---
 
-1.  **Clone the repository:**
-    ```bash
-    git clone https://github.com/AdnanHimself/baselock.git
-    cd baselock
-    ```
-
-2.  **Install dependencies:**
-    ```bash
-    npm install
-    ```
-
-3.  **Configure Environment:**
-    Create a `.env.local` file and add your Supabase credentials and WalletConnect Project ID:
-    ```env
-    NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
-    NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_key
-    NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID=your_project_id
-    ```
-
-4.  **Run the development server:**
-    ```bash
-    npm run dev
-    ```
-
-5.  **Open in Browser:**
-    Navigate to [http://localhost:3000](http://localhost:3000).
-
-## Smart Contract
-
-The current MVP uses a simple payment router contract on Base.
-
-- **Contract Address**: `0x9F219810226679bFb75698a0e4fFf03E59341672`
-- **Network**: Base Mainnet
-
-## Disclaimer
-
-⚠️ **MVP Status**: This is a Proof of Concept. The current implementation performs client-side verification of payments. For high-value content, a server-side verification mechanism (API route) is recommended to prevent bypassing the lock.
+**Built on Base** 🔵
+Fast transactions and tiny gas fees mean you keep more of what you earn.
