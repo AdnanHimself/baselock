@@ -28,20 +28,20 @@ export function Navbar() {
     ];
 
     return (
-        <nav className="w-full border-b border-border bg-background transition-colors duration-300">
-            <div className="px-6 h-16 flex items-center justify-between">
-                <div className="flex items-center gap-8">
-                    <Link href="/" className="text-xl font-bold bg-gradient-to-r from-blue-600 to-blue-400 dark:from-blue-400 dark:to-blue-600 bg-clip-text text-transparent">
+        <nav className="w-full border-b border-border bg-background transition-colors duration-300 sticky top-0 z-50 backdrop-blur-md bg-background/80">
+            <div className="px-4 md:px-6 h-16 flex items-center justify-between">
+                <div className="flex items-center gap-4 md:gap-8 overflow-hidden">
+                    <Link href="/" className="text-xl font-bold bg-gradient-to-r from-blue-600 to-blue-400 dark:from-blue-400 dark:to-blue-600 bg-clip-text text-transparent shrink-0">
                         BaseLock
                     </Link>
 
-                    <div className={`hidden md:flex items-center gap-1 overflow-hidden transition-all duration-500 ease-in-out ${isConnected ? 'max-w-[500px] opacity-100' : 'max-w-0 opacity-0'}`}>
+                    <div className={`flex items-center gap-1 overflow-x-auto no-scrollbar transition-all duration-500 ease-in-out ${isConnected ? 'opacity-100 max-w-[calc(100vw-180px)] md:max-w-[500px]' : 'max-w-0 opacity-0'}`}>
                         {tabs.map((tab) => (
                             <Link
                                 key={tab.href}
                                 href={tab.href}
                                 className={twMerge(
-                                    "px-4 py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap",
+                                    "px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap",
                                     pathname === tab.href
                                         ? "bg-primary/10 text-primary"
                                         : "text-muted-foreground hover:text-foreground hover:bg-secondary"
@@ -53,7 +53,7 @@ export function Navbar() {
                     </div>
                 </div>
 
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2 md:gap-4 shrink-0">
                     {mounted && (
                         <button
                             onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
@@ -63,7 +63,12 @@ export function Navbar() {
                             {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
                         </button>
                     )}
-                    <ConnectButton showBalance={false} />
+                    <div className="hidden md:block">
+                        <ConnectButton showBalance={false} />
+                    </div>
+                    <div className="md:hidden">
+                        <ConnectButton showBalance={false} accountStatus="avatar" chainStatus="none" />
+                    </div>
                 </div>
             </div>
         </nav>

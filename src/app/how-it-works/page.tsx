@@ -8,7 +8,7 @@ export default function HowItWorksPage() {
                 </div>
 
                 <div className="grid gap-6">
-                    <div className="flex gap-6 p-6 rounded-2xl bg-card border border-border hover:border-primary/50 transition-all group shadow-sm">
+                    <div className="flex flex-col md:flex-row gap-4 md:gap-6 p-6 rounded-2xl bg-card border border-border hover:border-primary/50 transition-all group shadow-sm">
                         <div className="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-600/20 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold text-xl shrink-0 group-hover:scale-110 transition-transform">1</div>
                         <div className="space-y-2">
                             <h3 className="text-xl font-semibold text-foreground group-hover:text-primary transition-colors">Create a Lock</h3>
@@ -16,7 +16,7 @@ export default function HowItWorksPage() {
                         </div>
                     </div>
 
-                    <div className="flex gap-6 p-6 rounded-2xl bg-card border border-border hover:border-primary/50 transition-all group shadow-sm">
+                    <div className="flex flex-col md:flex-row gap-4 md:gap-6 p-6 rounded-2xl bg-card border border-border hover:border-primary/50 transition-all group shadow-sm">
                         <div className="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-600/20 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold text-xl shrink-0 group-hover:scale-110 transition-transform">2</div>
                         <div className="space-y-2">
                             <h3 className="text-xl font-semibold text-foreground group-hover:text-primary transition-colors">Share the Link</h3>
@@ -24,7 +24,7 @@ export default function HowItWorksPage() {
                         </div>
                     </div>
 
-                    <div className="flex gap-6 p-6 rounded-2xl bg-card border border-border hover:border-primary/50 transition-all group shadow-sm">
+                    <div className="flex flex-col md:flex-row gap-4 md:gap-6 p-6 rounded-2xl bg-card border border-border hover:border-primary/50 transition-all group shadow-sm">
                         <div className="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-600/20 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold text-xl shrink-0 group-hover:scale-110 transition-transform">3</div>
                         <div className="space-y-2">
                             <h3 className="text-xl font-semibold text-foreground group-hover:text-primary transition-colors">Get Paid</h3>

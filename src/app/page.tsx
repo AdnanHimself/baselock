@@ -66,23 +66,23 @@ export default function Home() {
     <main className="min-h-[calc(100vh-7rem)] flex flex-col items-center justify-center p-4 bg-background text-foreground transition-colors">
       <div className="w-full max-w-md space-y-8">
         {!isConnected ? (
-          <div className="text-center space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+          <div className="text-center space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 px-4">
             <div className="space-y-4">
               <div className="inline-flex items-center justify-center p-4 bg-blue-600/10 dark:bg-blue-600/20 rounded-3xl mb-2">
-                <Lock className="w-12 h-12 text-blue-600 dark:text-blue-400" />
+                <Lock className="w-10 h-10 md:w-12 md:h-12 text-blue-600 dark:text-blue-400" />
               </div>
-              <h1 className="text-5xl font-bold tracking-tight bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 bg-clip-text text-transparent">
+              <h1 className="text-4xl md:text-5xl font-bold tracking-tight bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 bg-clip-text text-transparent">
                 BaseLock
               </h1>
-              <p className="text-xl text-muted-foreground leading-relaxed">
-                Monetize your content on Base.<br />
+              <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">
+                Monetize your content on Base.<br className="hidden md:block" />
                 Secure, simple, and decentralized.
               </p>
             </div>
 
             <div className="grid gap-4 text-left">
               <div className="flex items-start gap-3 p-4 rounded-xl bg-secondary/30 border border-border/50">
-                <div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg text-blue-600 dark:text-blue-400">
+                <div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg text-blue-600 dark:text-blue-400 shrink-0">
                   <LinkIcon className="w-5 h-5" />
                 </div>
                 <div>
@@ -91,7 +91,7 @@ export default function Home() {
                 </div>
               </div>
               <div className="flex items-start gap-3 p-4 rounded-xl bg-secondary/30 border border-border/50">
-                <div className="p-2 bg-green-100 dark:bg-green-900/30 rounded-lg text-green-600 dark:text-green-400">
+                <div className="p-2 bg-green-100 dark:bg-green-900/30 rounded-lg text-green-600 dark:text-green-400 shrink-0">
                   <Copy className="w-5 h-5" />
                 </div>
                 <div>
@@ -103,9 +103,6 @@ export default function Home() {
 
             <div className="pt-4">
               <p className="text-sm text-muted-foreground mb-4">Connect your wallet to get started</p>
-              {/* Connect Button is in Navbar, but we can add a visual cue or arrow pointing up if needed, 
-                  or just rely on the Navbar button which is standard web3 pattern. 
-                  For now, we keep the UI clean. */}
             </div>
           </div>
         ) : createdLink ? (
