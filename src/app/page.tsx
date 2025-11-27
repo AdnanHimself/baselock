@@ -77,7 +77,7 @@ export default function Home() {
                 <Lock className="w-10 h-10 md:w-12 md:h-12 text-blue-600 dark:text-blue-400" />
               </div>
               <h1 className="text-4xl md:text-6xl font-bold tracking-tight bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 bg-clip-text text-transparent">
-                Monetize Anything.
+                Monetize any link.
               </h1>
               <p className="text-lg md:text-xl text-muted-foreground leading-relaxed max-w-2xl mx-auto">
                 Stop giving away your value. Lock any link, share it, and <span className="text-foreground font-medium">get paid instantly</span> in USDC or ETH.
@@ -95,8 +95,8 @@ export default function Home() {
               />
               <FeatureCard
                 icon={<Shield className="w-6 h-6 text-green-500 dark:text-green-400" />}
-                title="Ironclad Security"
-                description="Your content is encrypted. Only verified buyers can unlock access."
+                title="Securely Gated"
+                description="Your content is hidden. Only verified buyers can unlock access."
               />
               <FeatureCard
                 icon={<Globe className="w-6 h-6 text-blue-500 dark:text-blue-400" />}

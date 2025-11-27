@@ -35,7 +35,7 @@ export function Navbar() {
                         BaseLock
                     </Link>
 
-                    <div className={`flex items-center gap-1 overflow-x-auto no-scrollbar transition-all duration-500 ease-in-out ${isConnected ? 'opacity-100 max-w-[calc(100vw-180px)] md:max-w-[500px]' : 'max-w-0 opacity-0'}`}>
+                    <div className="flex items-center gap-1 overflow-x-auto no-scrollbar transition-all duration-500 ease-in-out">
                         {tabs.map((tab) => (
                             <Link
                                 key={tab.href}
