@@ -21,7 +21,7 @@ const baseWithFallbacks: Chain = {
 
 export const config = getDefaultConfig({
     appName: 'BaseLock',
-    projectId: 'YOUR_PROJECT_ID', // User needs to replace this later
+    projectId: process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID || 'YOUR_PROJECT_ID',
     chains: [baseWithFallbacks, baseSepolia],
     ssr: true,
 });

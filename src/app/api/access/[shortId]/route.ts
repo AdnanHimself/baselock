@@ -17,8 +17,8 @@ const client = createPublicClient({
 
 const CONTRACT_ADDRESS = '0xB2d3a54378844b17d96D14E5CC000a8Ae5FaEbF8';
 
-export async function GET(req: NextRequest, { params }: { params: { shortId: string } }) {
-    const { shortId } = params;
+export async function GET(req: NextRequest, { params }: { params: Promise<{ shortId: string }> }) {
+    const { shortId } = await params;
     const payerAddress = req.nextUrl.searchParams.get('payer');
 
     if (!payerAddress) {
@@ -44,12 +44,13 @@ export async function GET(req: NextRequest, { params }: { params: { shortId: str
             event: parseAbiItem('event Paid(address indexed payer, address indexed receiver, string linkId, uint256 amount, address token)'),
             args: {
                 payer: payerAddress as `0x${string}`,
-                linkId: shortId,
             },
             fromBlock: 'earliest' // In production, you'd optimize this
         });
 
-        if (logs.length === 0) {
+        const hasPayment = logs.some(log => log.args.linkId === shortId);
+
+        if (!hasPayment) {
             return NextResponse.json({ error: 'Payment not found' }, { status: 402 });
         }
 

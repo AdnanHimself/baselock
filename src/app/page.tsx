@@ -63,14 +63,14 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen bg-neutral-950 text-white flex flex-col items-center justify-center p-4">
+    <main className="min-h-[calc(100vh-7rem)] flex flex-col items-center justify-center p-4 bg-background text-foreground transition-colors">
       <div className="w-full max-w-md space-y-8">
         <div className="text-center space-y-2">
           <div className="inline-flex items-center justify-center p-3 bg-blue-600 rounded-2xl mb-4">
             <Lock className="w-8 h-8 text-white" />
           </div>
           <h1 className="text-4xl font-bold tracking-tight">BaseLock</h1>
-          <p className="text-neutral-400">Monetize your links on Base L2.</p>
+          <p className="text-muted-foreground">Monetize your links on Base L2.</p>
         </div>
 
         {!isConnected ? (
@@ -78,24 +78,24 @@ export default function Home() {
             <ConnectButton />
           </div>
         ) : createdLink ? (
-          <div className="bg-neutral-900 border border-neutral-800 rounded-2xl p-6 space-y-4 animate-in fade-in zoom-in duration-300">
+          <div className="bg-card border border-border rounded-2xl p-6 shadow-xl space-y-4 animate-in fade-in zoom-in duration-300">
             <div className="text-center space-y-1">
-              <h3 className="text-xl font-semibold text-green-400">Link Created!</h3>
-              <p className="text-sm text-neutral-400">Share this link to start earning.</p>
+              <h3 className="text-xl font-semibold text-green-500">Link Created!</h3>
+              <p className="text-sm text-muted-foreground">Share this link to start earning.</p>
             </div>
 
-            <div className="flex items-center gap-2 bg-neutral-950 p-3 rounded-xl border border-neutral-800">
-              <LinkIcon className="w-4 h-4 text-neutral-500" />
+            <div className="flex items-center gap-2 bg-secondary/50 p-3 rounded-xl border border-border">
+              <LinkIcon className="w-4 h-4 text-muted-foreground" />
               <input
                 readOnly
                 value={createdLink}
-                className="bg-transparent flex-1 text-sm outline-none text-neutral-300"
+                className="bg-transparent flex-1 text-sm outline-none text-foreground"
               />
               <button
                 onClick={copyToClipboard}
-                className="p-2 hover:bg-neutral-800 rounded-lg transition-colors"
+                className="p-2 hover:bg-secondary rounded-lg transition-colors"
               >
-                {copied ? <Check className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4 text-neutral-400" />}
+                {copied ? <Check className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4 text-muted-foreground" />}
               </button>
             </div>
 
@@ -112,46 +112,48 @@ export default function Home() {
             </Button>
           </div>
         ) : (
-          <form onSubmit={handleCreate} className="bg-neutral-900 border border-neutral-800 rounded-2xl p-6 space-y-6">
+          <form onSubmit={handleCreate} className="bg-card border border-border rounded-2xl p-6 space-y-6 shadow-sm">
             <div className="space-y-2">
-              <label className="text-sm font-medium text-neutral-300">Target URL</label>
+              <label className="text-sm font-medium text-foreground">Target URL</label>
               <input
                 type="url"
-                required
-                placeholder="https://dropbox.com/..."
+                placeholder="https://..."
                 value={targetUrl}
                 onChange={(e) => setTargetUrl(e.target.value)}
-                className="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-4 py-3 text-white placeholder:text-neutral-600 focus:outline-none focus:ring-2 focus:ring-blue-600 transition-all"
+                className="w-full bg-input/10 border border-input rounded-xl px-4 py-3 focus:outline-none focus:border-primary transition-colors placeholder:text-muted-foreground text-foreground"
+                required
               />
-              <p className="text-xs text-neutral-500">The secret content users pay to see.</p>
+              <p className="text-xs text-muted-foreground">The secret content users pay to see.</p>
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium text-neutral-300">Title (Public)</label>
+              <label className="text-sm font-medium text-foreground">Title</label>
               <input
                 type="text"
-                required
-                placeholder="Exclusive 4K Wallpaper Pack"
+                placeholder="e.g. Exclusive Report"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                className="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-4 py-3 text-white placeholder:text-neutral-600 focus:outline-none focus:ring-2 focus:ring-blue-600 transition-all"
+                className="w-full bg-input/10 border border-input rounded-xl px-4 py-3 focus:outline-none focus:border-primary transition-colors placeholder:text-muted-foreground text-foreground"
+                required
               />
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium text-neutral-300">Price (ETH)</label>
+              <label className="text-sm font-medium text-foreground">Price (USDC)</label>
               <div className="relative">
                 <input
                   type="number"
-                  step="0.000001"
-                  required
-                  placeholder="0.001"
+                  step="0.01"
+                  min="0.1"
+                  placeholder="0.00"
                   value={price}
                   onChange={(e) => setPrice(e.target.value)}
-                  className="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-4 py-3 text-white placeholder:text-neutral-600 focus:outline-none focus:ring-2 focus:ring-blue-600 transition-all"
+                  className="w-full bg-input/10 border border-input rounded-xl px-4 py-3 pl-12 focus:outline-none focus:border-primary transition-colors placeholder:text-muted-foreground text-foreground"
+                  required
                 />
-                <span className="absolute right-4 top-3.5 text-sm text-neutral-500 font-medium">ETH</span>
+                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground">$</span>
               </div>
+              <p className="text-xs text-muted-foreground">Minimum 0.1 USDC. 1% platform fee applies.</p>
             </div>
 
             <Button

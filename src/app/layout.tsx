@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import '@rainbow-me/rainbowkit/styles.css';
 import { Providers } from "./providers";
+import { ThemeProvider } from "@/components/ThemeProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -10,6 +11,8 @@ export const metadata: Metadata = {
   title: "BaseLock",
   description: "Token-gated links on Base L2",
 };
+
+import { Navbar } from "@/components/Navbar";
 
 export default function RootLayout({
   children,
@@ -19,7 +22,16 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
-        <Providers>{children}</Providers>
+        <Providers>
+          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+            <div className="flex flex-col min-h-screen">
+              <Navbar />
+              <div className="flex-1">
+                {children}
+              </div>
+            </div>
+          </ThemeProvider>
+        </Providers>
       </body>
     </html>
   );

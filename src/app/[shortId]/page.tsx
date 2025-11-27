@@ -2,24 +2,29 @@
 
 import { useEffect, useState } from 'react';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
-import { useAccount, useWriteContract, useWaitForTransactionReceipt, usePublicClient } from 'wagmi';
+import { useAccount, useWriteContract, useWaitForTransactionReceipt, usePublicClient, useReadContract } from 'wagmi';
 import { supabase } from '@/lib/supabase';
-import { Loader2, Lock, Unlock, Download, AlertCircle } from 'lucide-react';
-import { parseEther, parseUnits } from 'viem';
+import { Loader2, Lock, Unlock, Download, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { parseUnits, formatUnits } from 'viem';
 import { useParams } from 'next/navigation';
 import { Button } from '@/components/ui/Button';
 import { useToast } from '@/components/ui/Toast';
 
-// ABI for BaseLock (Simplified for MVP)
+// USDC Address on Base Mainnet
+const USDC_ADDRESS = '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913';
+const CONTRACT_ADDRESS = '0x299433314161E725BB2E02D2D0ff890fD4Dbe85a';
+
 const BASELOCK_ABI = [
     {
         "inputs": [
-            { "internalType": "address payable", "name": "receiver", "type": "address" },
-            { "internalType": "string", "name": "linkId", "type": "string" }
+            { "internalType": "address", "name": "token", "type": "address" },
+            { "internalType": "address", "name": "receiver", "type": "address" },
+            { "internalType": "string", "name": "linkId", "type": "string" },
+            { "internalType": "uint256", "name": "amount", "type": "uint256" }
         ],
-        "name": "payEth",
+        "name": "payToken",
         "outputs": [],
-        "stateMutability": "payable",
+        "stateMutability": "nonpayable",
         "type": "function"
     },
     {
@@ -36,7 +41,35 @@ const BASELOCK_ABI = [
     }
 ] as const;
 
-const CONTRACT_ADDRESS = '0x9F219810226679bFb75698a0e4fFf03E59341672';
+const ERC20_ABI = [
+    {
+        "inputs": [
+            { "name": "spender", "type": "address" },
+            { "name": "amount", "type": "uint256" }
+        ],
+        "name": "approve",
+        "outputs": [{ "name": "", "type": "bool" }],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            { "name": "owner", "type": "address" },
+            { "name": "spender", "type": "address" }
+        ],
+        "name": "allowance",
+        "outputs": [{ "name": "", "type": "uint256" }],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [{ "name": "account", "type": "address" }],
+        "name": "balanceOf",
+        "outputs": [{ "name": "", "type": "uint256" }],
+        "stateMutability": "view",
+        "type": "function"
+    }
+] as const;
 
 export default function UnlockPage() {
     const { shortId } = useParams();
@@ -48,9 +81,32 @@ export default function UnlockPage() {
     const [loading, setLoading] = useState(true);
     const [hasAccess, setHasAccess] = useState(false);
     const [checkingAccess, setCheckingAccess] = useState(false);
+    const [isApproving, setIsApproving] = useState(false);
 
-    const { data: hash, writeContract, isPending } = useWriteContract();
+    const { data: hash, writeContract, isPending, error: writeError } = useWriteContract();
     const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({ hash });
+
+    // Read Allowance
+    const { data: allowance, refetch: refetchAllowance } = useReadContract({
+        address: USDC_ADDRESS,
+        abi: ERC20_ABI,
+        functionName: 'allowance',
+        args: [address!, CONTRACT_ADDRESS],
+        query: {
+            enabled: !!address && !!linkData,
+        }
+    });
+
+    // Read Balance
+    const { data: balance } = useReadContract({
+        address: USDC_ADDRESS,
+        abi: ERC20_ABI,
+        functionName: 'balanceOf',
+        args: [address!],
+        query: {
+            enabled: !!address,
+        }
+    });
 
     useEffect(() => {
         if (shortId) fetchLinkData();
@@ -61,6 +117,13 @@ export default function UnlockPage() {
             checkAccess();
         }
     }, [isConnected, address, linkData, isSuccess]);
+
+    // Refetch allowance after transaction success (likely an approval)
+    useEffect(() => {
+        if (isSuccess) {
+            refetchAllowance();
+        }
+    }, [isSuccess, refetchAllowance]);
 
     const fetchLinkData = async () => {
         try {
@@ -109,9 +172,25 @@ export default function UnlockPage() {
             }
         } catch (err) {
             console.error('Error checking access:', err);
-            // Don't show toast here to avoid spamming if it fails silently
         } finally {
             setCheckingAccess(false);
+        }
+    };
+
+    const handleApprove = () => {
+        if (!linkData) return;
+        setIsApproving(true);
+        try {
+            writeContract({
+                address: USDC_ADDRESS,
+                abi: ERC20_ABI,
+                functionName: 'approve',
+                args: [CONTRACT_ADDRESS, parseUnits(linkData.price.toString(), 6)], // USDC has 6 decimals
+            });
+        } catch (err) {
+            console.error('Approval error:', err);
+            showToast('Approval failed', 'error');
+            setIsApproving(false);
         }
     };
 
@@ -122,9 +201,13 @@ export default function UnlockPage() {
             writeContract({
                 address: CONTRACT_ADDRESS,
                 abi: BASELOCK_ABI,
-                functionName: 'payEth',
-                args: [linkData.receiver_address, shortId as string],
-                value: parseEther(linkData.price.toString()),
+                functionName: 'payToken',
+                args: [
+                    USDC_ADDRESS,
+                    linkData.receiver_address,
+                    shortId as string,
+                    parseUnits(linkData.price.toString(), 6)
+                ],
             });
         } catch (err) {
             console.error('Payment error:', err);
@@ -132,19 +215,23 @@ export default function UnlockPage() {
         }
     };
 
-    if (loading) return <div className="min-h-screen bg-neutral-950 flex items-center justify-center text-white"><Loader2 className="animate-spin" /></div>;
-    if (!linkData) return <div className="min-h-screen bg-neutral-950 flex items-center justify-center text-white">Link not found</div>;
+    if (loading) return <div className="min-h-screen bg-background flex items-center justify-center text-foreground"><Loader2 className="animate-spin" /></div>;
+    if (!linkData) return <div className="min-h-screen bg-background flex items-center justify-center text-foreground">Link not found</div>;
+
+    const priceInUnits = parseUnits(linkData.price.toString(), 6);
+    const hasAllowance = allowance ? allowance >= priceInUnits : false;
+    const hasBalance = balance ? balance >= priceInUnits : false;
 
     return (
-        <main className="min-h-screen bg-neutral-950 text-white flex flex-col items-center justify-center p-4">
+        <main className="min-h-screen bg-background text-foreground flex flex-col items-center justify-center p-4">
             <div className="w-full max-w-md space-y-8">
                 <div className="text-center space-y-4">
-                    <div className="inline-flex items-center justify-center p-4 bg-neutral-900 rounded-full border border-neutral-800">
-                        {hasAccess ? <Unlock className="w-8 h-8 text-green-500" /> : <Lock className="w-8 h-8 text-red-500" />}
+                    <div className="inline-flex items-center justify-center p-4 bg-card rounded-full border border-border shadow-sm">
+                        {hasAccess ? <Unlock className="w-8 h-8 text-green-500" /> : <Lock className="w-8 h-8 text-destructive" />}
                     </div>
                     <h1 className="text-3xl font-bold">{linkData.title}</h1>
-                    <p className="text-neutral-400">
-                        {hasAccess ? "You have access to this content." : `Pay ${linkData.price} ETH to unlock.`}
+                    <p className="text-muted-foreground">
+                        {hasAccess ? "You have access to this content." : `Pay ${linkData.price} USDC to unlock.`}
                     </p>
                 </div>
 
@@ -166,24 +253,43 @@ export default function UnlockPage() {
                         </a>
                     </div>
                 ) : (
-                    <div className="bg-neutral-900 border border-neutral-800 rounded-2xl p-6 space-y-6">
-                        <div className="flex justify-between items-center text-sm text-neutral-400">
+                    <div className="bg-card border border-border rounded-2xl p-6 space-y-6 shadow-xl">
+                        <div className="flex justify-between items-center text-sm text-muted-foreground">
                             <span>Price</span>
-                            <span className="text-white font-mono text-lg">{linkData.price} ETH</span>
+                            <span className="text-foreground font-mono text-lg">{linkData.price} USDC</span>
                         </div>
 
-                        <Button
-                            onClick={handlePay}
-                            disabled={isPending || isConfirming || checkingAccess}
-                            isLoading={isPending || isConfirming || checkingAccess}
-                        >
-                            {isPending ? 'Confirm in Wallet...' :
-                                isConfirming ? 'Processing Transaction...' :
-                                    checkingAccess ? 'Checking Access...' :
-                                        'Pay to Unlock'}
-                        </Button>
+                        {!hasBalance && (
+                            <div className="flex items-center gap-2 text-destructive text-sm bg-destructive/10 p-3 rounded-lg border border-destructive/20">
+                                <AlertCircle className="w-4 h-4" />
+                                <span>Insufficient USDC balance</span>
+                            </div>
+                        )}
 
-                        {isSuccess && !hasAccess && (
+                        {!hasAllowance ? (
+                            <Button
+                                onClick={handleApprove}
+                                disabled={isPending || isConfirming || !hasBalance}
+                                isLoading={isPending || isConfirming}
+                            >
+                                {isPending ? 'Confirm Approval...' :
+                                    isConfirming ? 'Approving USDC...' :
+                                        'Approve USDC'}
+                            </Button>
+                        ) : (
+                            <Button
+                                onClick={handlePay}
+                                disabled={isPending || isConfirming || checkingAccess}
+                                isLoading={isPending || isConfirming || checkingAccess}
+                            >
+                                {isPending ? 'Confirm Payment...' :
+                                    isConfirming ? 'Processing Transaction...' :
+                                        checkingAccess ? 'Checking Access...' :
+                                            'Pay to Unlock'}
+                            </Button>
+                        )}
+
+                        {isSuccess && !hasAccess && hasAllowance && (
                             <div className="space-y-4">
                                 <div className="flex items-center gap-2 text-yellow-500 text-sm justify-center">
                                     <Loader2 className="w-4 h-4 animate-spin" />

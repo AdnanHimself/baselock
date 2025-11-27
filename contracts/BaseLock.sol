@@ -3,47 +3,83 @@ pragma solidity ^0.8.19;
 
 /**
  * @title BaseLock
- * @dev Simple payment router for token-gated links on Base L2.
- *      It emits events that the off-chain API can verify.
+ * @dev Token-gated links on Base L2 with 1% fee.
+ *      Only supports ERC20 tokens (USDC).
  */
 contract BaseLock {
+    address public owner;
+    uint256 public constant FEE_BASIS_POINTS = 100; // 1% (100 / 10000)
+
     // Event emitted when a user pays to unlock a link
-    event Paid(address indexed payer, address indexed receiver, string indexed linkId, uint256 amount, address token);
+    event Paid(
+        address indexed payer,
+        address indexed receiver,
+        string indexed linkId,
+        uint256 amount,
+        address token
+    );
 
-    /**
-     * @notice Pay ETH to unlock a link
-     * @param receiver The address of the creator who receives the funds
-     * @param linkId The unique ID of the link (e.g. Supabase ID)
-     */
-    function payEth(address payable receiver, string calldata linkId) external payable {
-        require(msg.value > 0, "Amount must be > 0");
-        
-        // Transfer funds directly to the receiver
-        (bool sent, ) = receiver.call{value: msg.value}("");
-        require(sent, "Failed to send Ether");
+    constructor() {
+        owner = msg.sender;
+    }
 
-        emit Paid(msg.sender, receiver, linkId, msg.value, address(0));
+    modifier onlyOwner() {
+        require(msg.sender == owner, "Only owner can call this");
+        _;
     }
 
     /**
-     * @notice Pay ERC20 (e.g. USDC) to unlock a link
+     * @notice Update the fee recipient
+     * @param newOwner The address of the new owner
+     */
+    function setOwner(address newOwner) external onlyOwner {
+        require(newOwner != address(0), "Invalid address");
+        owner = newOwner;
+    }
+
+    /**
+     * @notice Pay ERC20 (USDC) to unlock a link
      * @param token The address of the ERC20 token
      * @param receiver The address of the creator
      * @param linkId The unique ID of the link
-     * @param amount The amount of tokens to pay
+     * @param amount The total amount the user pays
      */
-    function payToken(address token, address receiver, string calldata linkId, uint256 amount) external {
+    function payToken(
+        address token,
+        address receiver,
+        string calldata linkId,
+        uint256 amount
+    ) external {
         require(amount > 0, "Amount must be > 0");
 
-        // Transfer tokens from payer to receiver
-        // Note: Payer must have approved this contract to spend tokens
-        bool sent = IERC20(token).transferFrom(msg.sender, receiver, amount);
-        require(sent, "Token transfer failed");
+        // Calculate fee (1%)
+        uint256 fee = (amount * FEE_BASIS_POINTS) / 10000;
+        uint256 receiverAmount = amount - fee;
+
+        // Transfer fee to owner
+        if (fee > 0) {
+            bool feeSent = IERC20(token).transferFrom(msg.sender, owner, fee);
+            require(feeSent, "Fee transfer failed");
+        }
+
+        // Transfer remaining amount to receiver
+        if (receiverAmount > 0) {
+            bool sent = IERC20(token).transferFrom(
+                msg.sender,
+                receiver,
+                receiverAmount
+            );
+            require(sent, "Token transfer failed");
+        }
 
         emit Paid(msg.sender, receiver, linkId, amount, token);
     }
 }
 
 interface IERC20 {
-    function transferFrom(address sender, address recipient, uint256 amount) external returns (bool);
+    function transferFrom(
+        address sender,
+        address recipient,
+        uint256 amount
+    ) external returns (bool);
 }
