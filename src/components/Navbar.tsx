@@ -57,7 +57,7 @@ export function Navbar() {
                     {mounted && (
                         <button
                             onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-                            className="p-2 rounded-lg bg-secondary text-muted-foreground hover:text-foreground transition-colors"
+                            className="p-2 rounded-lg bg-secondary text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
                             aria-label="Toggle theme"
                         >
                             {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
