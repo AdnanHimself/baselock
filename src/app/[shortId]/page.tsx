@@ -406,16 +406,19 @@ export default function UnlockPage() {
                             </button>
                         </div>
 
-                        <div className="flex justify-between items-center text-sm text-muted-foreground">
+                        <div className="flex justify-between items-center text-sm text-muted-foreground bg-secondary/20 p-4 rounded-xl border border-border/50">
                             <span>Price</span>
-                            <span className="text-foreground font-mono text-lg">
+                            <span className="text-foreground font-bold text-2xl text-primary">
                                 {paymentMethod === 'USDC' ? `${linkData.price} USDC` : `~${(parseFloat(linkData.price) * 0.0003).toFixed(4)} ETH`}
                             </span>
                         </div>
 
                         {/* Tipping */}
                         <div className="space-y-2">
-                            <label className="text-sm font-medium text-muted-foreground">Add a Tip (Optional)</label>
+                            <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">
+                                Add a Tip
+                                <span className="text-xs font-normal bg-secondary px-2 py-0.5 rounded-full text-muted-foreground/70">Optional</span>
+                            </label>
                             <div className="relative">
                                 <input
                                     type="number"

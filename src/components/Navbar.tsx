@@ -49,8 +49,9 @@ export function Navbar() {
 
     return (
         <nav className="w-full border-b border-border bg-background transition-colors duration-300 sticky top-0 z-50 backdrop-blur-md bg-background/80">
-            <div className="px-4 md:px-6 h-16 flex items-center justify-between">
-                <div className="flex items-center gap-4 md:gap-8 overflow-hidden">
+            <div className="px-4 md:px-6 flex flex-col md:flex-row md:items-center md:justify-between min-h-[4rem]">
+                {/* Top Row: Logo + Actions (Mobile) / Logo + Links + Actions (Desktop) */}
+                <div className="flex items-center justify-between w-full md:w-auto h-16 md:h-auto">
                     <Link href="/" className="flex items-center gap-2 text-xl font-bold text-foreground hover:text-primary transition-colors shrink-0">
                         <div className="p-1.5 bg-primary/10 rounded-lg">
                             <Lock className="w-5 h-5 text-primary" />
@@ -58,13 +59,14 @@ export function Navbar() {
                         BaseLock
                     </Link>
 
-                    <div className="flex items-center gap-1 overflow-x-auto no-scrollbar transition-all duration-500 ease-in-out">
+                    {/* Desktop Links (Hidden on Mobile) */}
+                    <div className="hidden md:flex items-center gap-1 ml-8">
                         {tabs.map((tab) => (
                             <Link
                                 key={tab.href}
                                 href={tab.href}
                                 className={twMerge(
-                                    "px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap",
+                                    "px-4 py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap",
                                     pathname === tab.href
                                         ? "bg-primary/10 text-primary"
                                         : "text-muted-foreground hover:text-foreground hover:bg-secondary"
@@ -74,24 +76,43 @@ export function Navbar() {
                             </Link>
                         ))}
                     </div>
+
+                    {/* Actions (Theme + Connect) */}
+                    <div className="flex items-center gap-2 md:gap-4 shrink-0 md:ml-auto">
+                        {mounted && (
+                            <button
+                                onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                                className="p-2 rounded-lg bg-secondary text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+                                aria-label="Toggle theme"
+                            >
+                                {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+                            </button>
+                        )}
+                        <div className="hidden md:block">
+                            <ConnectButton showBalance={false} />
+                        </div>
+                        <div className="md:hidden">
+                            <ConnectButton showBalance={false} accountStatus="avatar" chainStatus="none" />
+                        </div>
+                    </div>
                 </div>
 
-                <div className="flex items-center gap-2 md:gap-4 shrink-0">
-                    {mounted && (
-                        <button
-                            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-                            className="p-2 rounded-lg bg-secondary text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
-                            aria-label="Toggle theme"
+                {/* Mobile Links (Second Row) */}
+                <div className="md:hidden flex items-center gap-1 overflow-x-auto no-scrollbar pb-3 -mx-4 px-4">
+                    {tabs.map((tab) => (
+                        <Link
+                            key={tab.href}
+                            href={tab.href}
+                            className={twMerge(
+                                "px-3 py-1.5 rounded-lg text-sm font-medium transition-colors whitespace-nowrap",
+                                pathname === tab.href
+                                    ? "bg-primary/10 text-primary"
+                                    : "text-muted-foreground hover:text-foreground hover:bg-secondary"
+                            )}
                         >
-                            {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-                        </button>
-                    )}
-                    <div className="hidden md:block">
-                        <ConnectButton showBalance={false} />
-                    </div>
-                    <div className="md:hidden">
-                        <ConnectButton showBalance={false} accountStatus="avatar" chainStatus="none" />
-                    </div>
+                            {tab.name}
+                        </Link>
+                    ))}
                 </div>
             </div>
         </nav>

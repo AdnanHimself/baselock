@@ -58,30 +58,28 @@ export default function AdminPage() {
 
     if (loading) {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-black text-white">
-                <Loader2 className="w-8 h-8 animate-spin text-purple-500" />
+            <div className="min-h-screen flex items-center justify-center bg-background text-foreground">
+                <Loader2 className="w-8 h-8 animate-spin text-primary" />
             </div>
         );
     }
 
     if (!isConnected) {
         return (
-            <div className="min-h-screen flex flex-col items-center justify-center bg-black text-white gap-4">
+            <div className="min-h-screen flex flex-col items-center justify-center bg-background text-foreground gap-4">
                 <p>Please connect your wallet to access the Admin Dashboard.</p>
-                {/* We need ConnectButton here. But it's not imported. Let's just tell them to connect. 
-                    Or better, import ConnectButton. */}
             </div>
         );
     }
 
     if (!isAdmin && !loading) return (
-        <div className="min-h-screen flex items-center justify-center bg-black text-white">
+        <div className="min-h-screen flex items-center justify-center bg-background text-foreground">
             <p>Access Denied. You are not the owner of the contract.</p>
         </div>
     );
 
     return (
-        <div className="min-h-screen bg-black text-white p-8">
+        <div className="min-h-screen bg-background text-foreground p-8">
             <div className="max-w-6xl mx-auto">
                 <header className="mb-8 flex items-center justify-between">
                     <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-400 to-pink-600 bg-clip-text text-transparent">
@@ -90,7 +88,7 @@ export default function AdminPage() {
                     <div className="flex gap-4">
                         <button
                             onClick={() => supabase.auth.signOut().then(() => router.push('/'))}
-                            className="px-4 py-2 rounded-lg bg-white/10 hover:bg-white/20 transition-colors"
+                            className="px-4 py-2 rounded-lg bg-secondary hover:bg-secondary/80 transition-colors"
                         >
                             Sign Out
                         </button>
@@ -127,8 +125,8 @@ export default function AdminPage() {
                     </nav>
 
                     {/* Content */}
-                    <main className="col-span-9 bg-white/5 rounded-2xl p-6 border border-white/10">
-                        {activeTab === 'overview' && <OverviewTab />}
+                    <main className="col-span-9 bg-card rounded-2xl p-6 border border-border">
+                        {activeTab === 'overview' && <OverviewTab supabase={supabase} />}
                         {activeTab === 'fees' && <FeesTab />}
                         {activeTab === 'feedback' && <FeedbackTab supabase={supabase} />}
                         {activeTab === 'users' && <UsersTab supabase={supabase} />}
@@ -146,8 +144,8 @@ function TabButton({ active, onClick, icon, label }: any) {
             className={cn(
                 "w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all text-left",
                 active
-                    ? "bg-purple-600 text-white shadow-lg shadow-purple-900/20"
-                    : "hover:bg-white/5 text-gray-400 hover:text-white"
+                    ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20"
+                    : "hover:bg-secondary text-muted-foreground hover:text-foreground"
             )}
         >
             {icon}
@@ -156,14 +154,58 @@ function TabButton({ active, onClick, icon, label }: any) {
     );
 }
 
-function OverviewTab() {
+function OverviewTab({ supabase }: any) {
+    const [stats, setStats] = useState({
+        totalLinks: 0,
+        totalVolume: 0,
+        activeUsers: 0
+    });
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchStats = async () => {
+            try {
+                // Fetch all links
+                const { data: links, error } = await supabase
+                    .from('links')
+                    .select('price, sales_count, receiver_address');
+
+                if (error) throw error;
+
+                if (links) {
+                    const totalLinks = links.length;
+
+                    // Calculate Total Volume (approximate based on price * sales_count)
+                    const totalVolume = links.reduce((acc: number, link: any) => {
+                        return acc + (parseFloat(link.price) * (link.sales_count || 0));
+                    }, 0);
+
+                    // Calculate Active Users (Unique receivers)
+                    const uniqueUsers = new Set(links.map((link: any) => link.receiver_address)).size;
+
+                    setStats({
+                        totalLinks,
+                        totalVolume,
+                        activeUsers: uniqueUsers
+                    });
+                }
+            } catch (err) {
+                console.error('Error fetching stats:', err);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchStats();
+    }, [supabase]);
+
     return (
         <div className="space-y-6">
             <h2 className="text-2xl font-bold">System Overview</h2>
             <div className="grid grid-cols-3 gap-4">
-                <StatCard label="Total Links" value="Loading..." />
-                <StatCard label="Total Volume" value="Loading..." />
-                <StatCard label="Active Users" value="Loading..." />
+                <StatCard label="Total Links" value={loading ? "Loading..." : stats.totalLinks} />
+                <StatCard label="Total Volume (USDC)" value={loading ? "Loading..." : `$${stats.totalVolume.toLocaleString()}`} />
+                <StatCard label="Active Creators" value={loading ? "Loading..." : stats.activeUsers} />
             </div>
 
         </div>
@@ -172,8 +214,8 @@ function OverviewTab() {
 
 function StatCard({ label, value }: any) {
     return (
-        <div className="bg-white/5 p-6 rounded-xl border border-white/10">
-            <p className="text-sm text-gray-400">{label}</p>
+        <div className="bg-secondary/20 p-6 rounded-xl border border-border">
+            <p className="text-sm text-muted-foreground">{label}</p>
             <p className="text-2xl font-bold mt-1">{value}</p>
         </div>
     );
@@ -186,7 +228,7 @@ function FeesTab() {
         <div className="space-y-6">
             <h2 className="text-2xl font-bold">Fees & Contract</h2>
             <div className="space-y-4">
-                <label className="block text-sm font-medium text-gray-300">Platform Fee (%)</label>
+                <label className="block text-sm font-medium text-muted-foreground">Platform Fee (%)</label>
                 <div className="flex gap-4">
                     <input
                         type="number"
@@ -195,13 +237,13 @@ function FeesTab() {
                         step="0.1"
                         value={fee}
                         onChange={(e) => setFee(parseFloat(e.target.value))}
-                        className="bg-black/50 border border-white/20 rounded-lg px-4 py-2 w-32 focus:outline-none focus:border-purple-500"
+                        className="bg-input border border-input rounded-lg px-4 py-2 w-32 focus:outline-none focus:border-primary"
                     />
-                    <button className="bg-purple-600 hover:bg-purple-500 px-6 py-2 rounded-lg font-medium transition-colors">
+                    <button className="bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-2 rounded-lg font-medium transition-colors">
                         Update Fee
                     </button>
                 </div>
-                <p className="text-xs text-gray-500">
+                <p className="text-xs text-muted-foreground">
                     Updates the <code>feeBasisPoints</code> on the smart contract. Max 5%.
                 </p>
             </div>
@@ -225,10 +267,10 @@ function FeedbackTab({ supabase }: any) {
             <h2 className="text-2xl font-bold">User Feedback</h2>
             <div className="space-y-4">
                 {feedback.length === 0 ? (
-                    <p className="text-gray-500">No feedback yet.</p>
+                    <p className="text-muted-foreground">No feedback yet.</p>
                 ) : (
                     feedback.map((item) => (
-                        <div key={item.id} className="bg-white/5 p-4 rounded-xl border border-white/10">
+                        <div key={item.id} className="bg-secondary/20 p-4 rounded-xl border border-border">
                             <div className="flex justify-between items-start mb-2">
                                 <span className={cn(
                                     "text-xs px-2 py-1 rounded-full uppercase font-bold",
@@ -236,11 +278,11 @@ function FeedbackTab({ supabase }: any) {
                                 )}>
                                     {item.category || 'General'}
                                 </span>
-                                <span className="text-xs text-gray-500">
+                                <span className="text-xs text-muted-foreground">
                                     {new Date(item.created_at).toLocaleDateString()}
                                 </span>
                             </div>
-                            <p className="text-gray-200">{item.message}</p>
+                            <p className="text-foreground">{item.message}</p>
                         </div>
                     ))
                 )}
@@ -254,7 +296,7 @@ function UsersTab({ supabase }: any) {
     return (
         <div className="space-y-6">
             <h2 className="text-2xl font-bold">User Roles</h2>
-            <p className="text-gray-400">
+            <p className="text-muted-foreground">
                 Manage user roles and permissions here. (Requires <code>profiles</code> table population).
             </p>
         </div>

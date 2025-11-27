@@ -29,6 +29,7 @@ export default function MyLinksPage() {
                 .from('links')
                 .select('*')
                 .eq('receiver_address', address)
+                .eq('is_active', true) // Only fetch active links
                 .order('created_at', { ascending: false });
 
             if (error) throw error;
@@ -42,6 +43,26 @@ export default function MyLinksPage() {
             }
         } finally {
             setLoading(false);
+        }
+    };
+
+    const deleteLink = async (id: string) => {
+        if (!confirm('Are you sure you want to delete this link? It will no longer be accessible.')) return;
+
+        try {
+            // Soft delete: set is_active to false
+            const { error } = await supabase
+                .from('links')
+                .update({ is_active: false })
+                .eq('id', id);
+
+            if (error) throw error;
+
+            setLinks(links.filter(link => link.id !== id));
+            showToast('Link deleted successfully', 'success');
+        } catch (err) {
+            console.error('Error deleting link:', err);
+            showToast('Failed to delete link', 'error');
         }
     };
 
@@ -109,6 +130,10 @@ export default function MyLinksPage() {
                                             <span className="text-xs px-2 py-1 rounded-full bg-blue-100 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-500/20">
                                                 {link.price} USDC
                                             </span>
+                                            {/* Sales Badge */}
+                                            <span className="text-xs px-2 py-1 rounded-full bg-green-100 dark:bg-green-500/10 text-green-600 dark:text-green-400 border border-green-200 dark:border-green-500/20 flex items-center gap-1">
+                                                {link.sales_count || 0} Sales
+                                            </span>
                                         </div>
                                         <div className="flex items-center gap-2 text-sm text-muted-foreground">
                                             <span>{formatDistanceToNow(new Date(link.created_at), { addSuffix: true })}</span>
@@ -132,6 +157,13 @@ export default function MyLinksPage() {
                                         >
                                             <ExternalLink className="w-4 h-4" />
                                         </Link>
+                                        <button
+                                            onClick={() => deleteLink(link.id)}
+                                            className="p-2 hover:bg-red-500/10 rounded-lg text-muted-foreground hover:text-red-500 transition-colors"
+                                            title="Delete Link"
+                                        >
+                                            <Trash2 className="w-4 h-4" />
+                                        </button>
                                     </div>
                                 </div>
                             </div>

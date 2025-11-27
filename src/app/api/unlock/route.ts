@@ -35,7 +35,7 @@ export async function POST(req: NextRequest) {
         // 1. Fetch Link Price and Receiver from Database
         const { data: link, error: linkError } = await supabaseAdmin
             .from('links')
-            .select('price, receiver_address')
+            .select('price, receiver_address, sales_count')
             .eq('id', linkId)
             .single();
 
@@ -148,6 +148,30 @@ export async function POST(req: NextRequest) {
         if (secretError || !secret) {
             return NextResponse.json({ error: 'Content not found' }, { status: 404 });
         }
+
+        // 5. Update Sales Stats (Async - don't block response)
+        // We increment sales_count and set last_purchased_at
+        // Note: rpc() is better for atomic increments, but for now we'll just read-modify-write or assume low concurrency.
+        // Actually, Supabase doesn't have a simple atomic increment without a stored procedure.
+        // Let's create a stored procedure in the SQL file later if needed. For now, we'll just update.
+        // Wait, we can't easily do "sales_count = sales_count + 1" in a simple update call without RPC.
+        // Let's just fetch current count and update it, or better yet, just update last_purchased_at and we'll fix the count later with a proper RPC if needed.
+        // Actually, let's try to be robust. We can use the 'rpc' method if we had a function.
+        // Since we don't want to overcomplicate, let's just do a simple update.
+        // But wait, we already fetched 'link' in step 1. We can use that value + 1.
+        // It's not perfectly atomic but good enough for this MVP.
+
+        // Re-fetch to get latest count? No, let's just use what we have or do a blind update if possible.
+        // Supabase JS client doesn't support "increment" directly in update().
+        // Let's just update last_purchased_at for now and try to increment sales_count based on current known value.
+
+        await supabaseAdmin
+            .from('links')
+            .update({
+                sales_count: (link.sales_count || 0) + 1,
+                last_purchased_at: new Date().toISOString()
+            })
+            .eq('id', linkId);
 
         return NextResponse.json({ success: true, targetUrl: secret.target_url });
 

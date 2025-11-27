@@ -210,6 +210,7 @@ export default function Home() {
                       type="number"
                       step="0.01"
                       min="1"
+                      max="10000"
                       placeholder="0.00"
                       value={price}
                       onChange={(e) => setPrice(e.target.value)}
@@ -225,7 +226,7 @@ export default function Home() {
                 <p className="text-xs text-muted-foreground md:hidden mt-1">
                   Buyers can also pay with ETH (auto-converted).
                 </p>
-                <p className="text-xs text-muted-foreground mt-1">Minimum 1 USDC. 1% platform fee applies.</p>
+                <p className="text-xs text-muted-foreground mt-1">Min 1 USDC. Max 10,000 USDC. 1% platform fee applies.</p>
               </div>
 
               <Button
