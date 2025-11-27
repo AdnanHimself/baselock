@@ -8,13 +8,29 @@ import { useTheme } from 'next-themes';
 import { Sun, Moon, Lock } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
-import { useAccount } from 'wagmi';
+import { useAccount, useReadContract } from 'wagmi';
+
+// Placeholder for V2 Contract Address - User needs to update this after deployment
+const CONTRACT_ADDRESS_V2 = '0x5CB532D8799b36a6E5dfa1663b6cFDDdDB431405';
 
 export function Navbar() {
     const pathname = usePathname();
     const { theme, setTheme } = useTheme();
     const [mounted, setMounted] = useState(false);
-    const { isConnected } = useAccount();
+    const { address, isConnected } = useAccount();
+
+    // Read owner from contract
+    const { data: ownerAddress } = useReadContract({
+        address: CONTRACT_ADDRESS_V2,
+        abi: [{
+            inputs: [],
+            name: "owner",
+            outputs: [{ internalType: "address", name: "", type: "address" }],
+            stateMutability: "view",
+            type: "function"
+        }] as const,
+        functionName: 'owner',
+    });
 
     useEffect(() => {
         setMounted(true);
@@ -26,6 +42,10 @@ export function Navbar() {
         { name: 'How it works', href: '/how-it-works' },
         { name: 'Feedback', href: '/feedback' },
     ];
+
+    if (isConnected && address && ownerAddress && address.toLowerCase() === ownerAddress.toLowerCase()) {
+        tabs.push({ name: 'Admin', href: '/admin' });
+    }
 
     return (
         <nav className="w-full border-b border-border bg-background transition-colors duration-300 sticky top-0 z-50 backdrop-blur-md bg-background/80">
