@@ -9,6 +9,10 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
         }
 
+        if (parseFloat(price) < 1) {
+            return NextResponse.json({ error: 'Price must be at least 1 USDC' }, { status: 400 });
+        }
+
         // 1. Insert public metadata into 'links'
         const { error: linkError } = await supabaseAdmin
             .from('links')

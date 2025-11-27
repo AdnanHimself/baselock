@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createPublicClient, http, parseAbiItem } from 'viem';
+import { createPublicClient, http, parseAbiItem, decodeEventLog, keccak256, toBytes, parseUnits, verifyMessage } from 'viem';
 import { base } from 'viem/chains';
 import { supabaseAdmin } from '@/lib/supabase-admin';
 
@@ -9,17 +9,41 @@ const publicClient = createPublicClient({
     transport: http()
 });
 
-const CONTRACT_ADDRESS = '0x299433314161E725BB2E02D2D0ff890fD4Dbe85a';
+// TODO: Update this after deploying V2
+const CONTRACT_ADDRESS = '0x5CB532D8799b36a6E5dfa1663b6cFDDdDB431405';
 
 export async function POST(req: NextRequest) {
     try {
-        const { linkId, txHash, userAddress } = await req.json();
+        const { linkId, txHash, userAddress, signature } = await req.json();
 
-        if (!linkId || !txHash || !userAddress) {
+        if (!linkId || !txHash || !userAddress || !signature) {
             return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
         }
 
-        // 1. Verify Transaction on-chain
+        // 0. Verify Signature
+        const message = `Unlock content for link: ${linkId}`;
+        const isValidSignature = await verifyMessage({
+            address: userAddress,
+            message: message,
+            signature: signature,
+        });
+
+        if (!isValidSignature) {
+            return NextResponse.json({ error: 'Invalid signature' }, { status: 401 });
+        }
+
+        // 1. Fetch Link Price and Receiver from Database
+        const { data: link, error: linkError } = await supabaseAdmin
+            .from('links')
+            .select('price, receiver_address')
+            .eq('id', linkId)
+            .single();
+
+        if (linkError || !link) {
+            return NextResponse.json({ error: 'Link not found' }, { status: 404 });
+        }
+
+        // 2. Verify Transaction on-chain
         const transaction = await publicClient.getTransactionReceipt({
             hash: txHash
         });
@@ -32,47 +56,100 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: 'Transaction failed' }, { status: 400 });
         }
 
-        // Check if the transaction was to our contract
-        if (transaction.to?.toLowerCase() !== CONTRACT_ADDRESS.toLowerCase()) {
-            // It might be an internal transaction or interaction, but for now we expect direct interaction
-            // Actually, getTransactionReceipt 'to' is the contract address if it's a contract interaction.
-        }
+        // 3. Verify Event Logs
+        // Event: Paid(address indexed payer, address indexed receiver, string indexed linkId, uint256 amount, address token)
+        const paidEventAbi = parseAbiItem('event Paid(address indexed payer, address indexed receiver, string indexed linkId, uint256 amount, address token)');
 
-        // Verify the logs to ensure it was a "Paid" event for THIS linkId
-        // Event Signature: Paid(address indexed payer, address indexed receiver, string indexed linkId, uint256 amount, address token)
-        // We need to decode the logs.
-
-        // Simple check: Look for the log that matches our event signature and contains our linkId
-        // Topic 0 is the event signature hash.
-        // Topic 1 is payer (userAddress)
-        // Topic 2 is receiver
-        // Topic 3 is linkId (hashed because it's indexed string) - WAIT. Indexed strings are hashed (keccak256).
-
-        // Let's verify via the logs.
-        let isVerified = false;
+        let paymentVerified = false;
 
         for (const log of transaction.logs) {
+            // Check against V2 Contract Address (case insensitive)
+            // Note: If using placeholder, this check will fail unless we skip it for testing or user updates it.
+            // For now, we assume user updates it.
             if (log.address.toLowerCase() === CONTRACT_ADDRESS.toLowerCase()) {
                 try {
-                    // We can try to parse the log if we had the ABI, or just check topics manually.
-                    // Topic 0 for Paid(...)
-                    // We'll trust the client provided txHash is valid for now, but strictly we should check the topics.
-                    // For MVP, checking that the sender matches userAddress and it interacted with our contract is a good start.
-                    // But to prevent replay attacks (using the same tx for a different link), we MUST verify the linkId.
+                    const decodedLog = decodeEventLog({
+                        abi: [paidEventAbi],
+                        data: log.data,
+                        topics: log.topics
+                    });
 
-                    // Since linkId is a string and indexed, it's keccak256(bytes(linkId)).
-                    // We can compute that hash here.
+                    if (decodedLog.eventName === 'Paid') {
+                        const args = decodedLog.args;
 
-                    // However, doing this robustly requires decoding. 
-                    // Let's assume valid payment for now if the tx is successful and to the contract. 
-                    // IMPROVEMENT: Decode logs properly.
-                    isVerified = true;
+                        // Verify Link ID
+                        const expectedLinkIdHash = keccak256(toBytes(linkId));
+                        if (args.linkId !== expectedLinkIdHash) {
+                            continue;
+                        }
+
+                        // Verify Receiver (Prevent Payment Diversion)
+                        if (args.receiver.toLowerCase() !== link.receiver_address.toLowerCase()) {
+                            console.error(`Invalid receiver. Paid to: ${args.receiver}, Expected: ${link.receiver_address}`);
+                            continue;
+                        }
+
+                        // Verify Token and Amount
+                        const USDC_ADDRESS = '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913';
+                        const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
+
+                        if (args.token.toLowerCase() === USDC_ADDRESS.toLowerCase()) {
+                            // USDC Payment
+                            const requiredAmount = parseUnits(link.price.toString(), 6);
+                            if (args.amount < requiredAmount) {
+                                console.error(`Insufficient USDC payment. Paid: ${args.amount}, Required: ${requiredAmount}`);
+                                continue;
+                            }
+                        } else if (args.token === ZERO_ADDRESS) {
+                            // ETH Payment (Native)
+                            // Hardcoded rate: 1 USDC = 0.0003 ETH
+                            const ethRate = 0.0003;
+                            const priceVal = parseFloat(link.price.toString());
+                            const requiredETH = parseUnits((priceVal * ethRate).toFixed(18), 18);
+
+                            // 1% tolerance
+                            const tolerance = (requiredETH * BigInt(99)) / BigInt(100);
+
+                            if (args.amount < tolerance) {
+                                console.error(`Insufficient ETH payment. Paid: ${args.amount}, Required: ~${requiredETH}`);
+                                continue;
+                            }
+                        } else {
+                            console.error(`Invalid token. Paid with: ${args.token}`);
+                            continue;
+                        }
+
+                        // Verify Payer
+                        if (args.payer.toLowerCase() !== userAddress.toLowerCase()) {
+                            continue;
+                        }
+
+                        paymentVerified = true;
+                        break;
+                    }
                 } catch (e) {
-                    console.error("Log parsing error", e);
+                    // Log decoding failed or didn't match, continue to next log
+                    continue;
                 }
             }
         }
 
+        if (!paymentVerified) {
+            return NextResponse.json({ error: 'Invalid payment: Verification failed' }, { status: 400 });
+        }
+
+        // 4. Retrieve Secret Content
+        const { data: secret, error: secretError } = await supabaseAdmin
+            .from('secrets')
+            .select('target_url')
+            .eq('link_id', linkId)
+            .single();
+
+        if (secretError || !secret) {
+            return NextResponse.json({ error: 'Content not found' }, { status: 404 });
+        }
+
+        return NextResponse.json({ success: true, targetUrl: secret.target_url });
 
     } catch (error) {
         console.error('Unlock API Error:', error);

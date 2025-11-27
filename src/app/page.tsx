@@ -179,7 +179,7 @@ export default function Home() {
                   <input
                     type="number"
                     step="0.01"
-                    min="0.1"
+                    min="1"
                     placeholder="0.00"
                     value={price}
                     onChange={(e) => setPrice(e.target.value)}
@@ -188,7 +188,7 @@ export default function Home() {
                   />
                   <span className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground">$</span>
                 </div>
-                <p className="text-xs text-muted-foreground">Minimum 0.1 USDC. 1% platform fee applies.</p>
+                <p className="text-xs text-muted-foreground">Minimum 1 USDC. 1% platform fee applies.</p>
               </div>
 
               <Button
