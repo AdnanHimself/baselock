@@ -9,7 +9,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "BaseLock",
-  description: "Token-gated links on Base L2",
+  description: "Pay-to-Reveal Links on Base. Monetize any URL instantly.",
 };
 
 import { Navbar } from "@/components/Navbar";
