@@ -1,6 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import { createPublicClient, http, parseAbiItem } from 'viem';
-import { base, baseSepolia } from 'viem/chains';
+import { base } from 'viem/chains';
 import { NextRequest, NextResponse } from 'next/server';
 
 // Init Supabase (Admin context if needed, but anon is fine for read)
@@ -67,8 +67,8 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ shor
             message: "Payment verified. Access granted."
         });
 
-    } catch (err) {
-        console.error(err);
-        return NextResponse.json({ error: 'Verification failed' }, { status: 500 });
+    } catch (error: unknown) {
+        console.error('Error in access route:', error);
+        return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
     }
 }

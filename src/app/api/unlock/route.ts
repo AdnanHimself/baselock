@@ -139,7 +139,7 @@ export async function POST(req: NextRequest) {
                         paymentVerified = true;
                         break;
                     }
-                } catch (e) {
+                } catch {
                     // Log decoding failed or didn't match, continue to next log
                     continue;
                 }

@@ -131,7 +131,7 @@ export default function AdminDashboard() {
                         {activeTab === 'sales' && <SalesTab supabase={supabase} />}
                         {activeTab === 'fees' && <FeesTab />}
                         {activeTab === 'feedback' && <FeedbackTab supabase={supabase} />}
-                        {activeTab === 'users' && <UsersTab supabase={supabase} />}
+                        {activeTab === 'users' && <UsersTab />}
                     </main>
                 </div>
             </div>
@@ -224,7 +224,9 @@ function StatCard({ label, value, icon }: any) {
     );
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function SalesTab({ supabase }: { supabase: any }) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [sales, setSales] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -331,6 +333,7 @@ function FeesTab() {
 
     useEffect(() => {
         if (isSuccess) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setIsUpdating(false);
             setNewFee('');
             refetchFee();
@@ -438,7 +441,9 @@ function FeesTab() {
     );
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function FeedbackTab({ supabase }: any) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [feedback, setFeedback] = useState<any[]>([]);
 
     useEffect(() => {
@@ -478,7 +483,7 @@ function FeedbackTab({ supabase }: any) {
     );
 }
 
-function UsersTab({ supabase }: any) {
+function UsersTab() {
     // Placeholder for user management
     return (
         <div className="space-y-6">

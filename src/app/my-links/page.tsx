@@ -1,9 +1,9 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useAccount } from 'wagmi';
-import { Loader2, ExternalLink, Copy, Check, ChevronDown, ChevronUp, DollarSign, Calendar, Trash2 } from 'lucide-react';
+import { Loader2, ExternalLink, Copy, Check, ChevronDown, ChevronUp, DollarSign, Trash2 } from 'lucide-react';
 import Link from 'next/link';
 import { formatDistanceToNow } from 'date-fns';
 
@@ -36,21 +36,7 @@ export default function MyLinksPage() {
     const [loadingPurchases, setLoadingPurchases] = useState(false);
     const [copiedId, setCopiedId] = useState<string | null>(null);
 
-    useEffect(() => {
-        if (isConnected && address) {
-            fetchLinks();
-        } else {
-            setLoading(false);
-        }
-    }, [isConnected, address]);
-
-    useEffect(() => {
-        if (expandedLinkId) {
-            fetchPurchases(expandedLinkId);
-        }
-    }, [expandedLinkId]);
-
-    const fetchLinks = async () => {
+    const fetchLinks = useCallback(async () => {
         try {
             const { data, error } = await supabase
                 .from('links')
@@ -65,7 +51,21 @@ export default function MyLinksPage() {
         } finally {
             setLoading(false);
         }
-    };
+    }, [address]);
+
+    useEffect(() => {
+        if (isConnected && address) {
+            fetchLinks();
+        } else {
+            setLoading(false);
+        }
+    }, [isConnected, address, fetchLinks]);
+
+    useEffect(() => {
+        if (expandedLinkId) {
+            fetchPurchases(expandedLinkId);
+        }
+    }, [expandedLinkId]);
 
     const fetchPurchases = async (linkId: string) => {
         setLoadingPurchases(true);
@@ -156,7 +156,7 @@ export default function MyLinksPage() {
 
                 {links.length === 0 ? (
                     <div className="text-center py-12 bg-card rounded-xl border border-border">
-                        <p className="text-muted-foreground">You haven't created any links yet.</p>
+                        <p className="text-muted-foreground">You haven&apos;t created any links yet.</p>
                     </div>
                 ) : (
                     <div className="space-y-3 md:space-y-4">

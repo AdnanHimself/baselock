@@ -1,3 +1,5 @@
+
+
 export default function HowItWorksPage() {
     return (
         <main className="min-h-[calc(100vh-7rem)] bg-background text-foreground p-4 md:p-8 transition-colors">
@@ -9,33 +11,33 @@ export default function HowItWorksPage() {
 
                 <div className="grid gap-4 md:gap-6">
                     {/* Step 1 */}
-                    <div className="flex flex-col md:flex-row gap-4 md:gap-6 p-5 md:p-6 rounded-2xl bg-card border border-border hover:border-primary/50 transition-all group shadow-sm">
-                        <div className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-blue-100 dark:bg-blue-600/20 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold text-xl md:text-2xl shrink-0 group-hover:scale-110 transition-transform">1</div>
+                    <div className="flex flex-col md:flex-row gap-4 md:gap-6 p-5 md:p-6 rounded-2xl bg-card border border-border hover:border-primary/50 transition-all group shadow-sm hover-glow">
+                        <div className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-xl md:text-2xl shrink-0 group-hover:scale-110 transition-transform">1</div>
                         <div className="space-y-2 md:space-y-3">
                             <h3 className="text-xl md:text-2xl font-semibold text-foreground group-hover:text-primary transition-colors">Lock It</h3>
-                            <p className="text-muted-foreground text-sm md:text-base">
+                            <p className="text-foreground/80 text-sm md:text-base">
                                 Paste the link to your content (Google Drive, Notion, Calendly, unlisted YouTube video). Set your price in USDC or ETH.
                             </p>
                         </div>
                     </div>
 
                     {/* Step 2 */}
-                    <div className="flex flex-col md:flex-row gap-4 md:gap-6 p-5 md:p-6 rounded-2xl bg-card border border-border hover:border-primary/50 transition-all group shadow-sm">
-                        <div className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-blue-100 dark:bg-blue-600/20 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold text-xl md:text-2xl shrink-0 group-hover:scale-110 transition-transform">2</div>
+                    <div className="flex flex-col md:flex-row gap-4 md:gap-6 p-5 md:p-6 rounded-2xl bg-card border border-border hover:border-primary/50 transition-all group shadow-sm hover-glow">
+                        <div className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-xl md:text-2xl shrink-0 group-hover:scale-110 transition-transform">2</div>
                         <div className="space-y-2 md:space-y-3">
                             <h3 className="text-xl md:text-2xl font-semibold text-foreground group-hover:text-primary transition-colors">Share It</h3>
-                            <p className="text-muted-foreground text-sm md:text-base">
+                            <p className="text-foreground/80 text-sm md:text-base">
                                 We generate a unique baselock.xyz link. Post it on Farcaster, Twitter, or send it via DM.
                             </p>
                         </div>
                     </div>
 
                     {/* Step 3 */}
-                    <div className="flex flex-col md:flex-row gap-4 md:gap-6 p-5 md:p-6 rounded-2xl bg-card border border-border hover:border-primary/50 transition-all group shadow-sm">
-                        <div className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-blue-100 dark:bg-blue-600/20 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold text-xl md:text-2xl shrink-0 group-hover:scale-110 transition-transform">3</div>
+                    <div className="flex flex-col md:flex-row gap-4 md:gap-6 p-5 md:p-6 rounded-2xl bg-card border border-border hover:border-primary/50 transition-all group shadow-sm hover-glow">
+                        <div className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-xl md:text-2xl shrink-0 group-hover:scale-110 transition-transform">3</div>
                         <div className="space-y-2 md:space-y-3">
                             <h3 className="text-xl md:text-2xl font-semibold text-foreground group-hover:text-primary transition-colors">Profit</h3>
-                            <p className="text-muted-foreground text-sm md:text-base">
+                            <p className="text-foreground/80 text-sm md:text-base">
                                 Users pay to unlock the link. The crypto hits your wallet instantly. No middlemen, no waiting.
                             </p>
                         </div>
@@ -50,15 +52,15 @@ export default function HowItWorksPage() {
                     <div className="grid gap-6 md:grid-cols-3">
                         <div className="space-y-2">
                             <h3 className="font-semibold">Keep it accessible</h3>
-                            <p className="text-sm text-muted-foreground">BaseLock works best for impulse buys ($1 - $20).</p>
+                            <p className="text-sm text-foreground/80">BaseLock works best for impulse buys ($1 - $20).</p>
                         </div>
                         <div className="space-y-2">
                             <h3 className="font-semibold">Describe the value</h3>
-                            <p className="text-sm text-muted-foreground">Since users can't see the content yet, clearly state what they are buying.</p>
+                            <p className="text-sm text-foreground/80">Since users can&apos;t see the content yet, clearly state what they are buying.</p>
                         </div>
                         <div className="space-y-2">
                             <h3 className="font-semibold">Proof of Support</h3>
-                            <p className="text-sm text-muted-foreground">Ask true fans to "unlock" a link just to support your work.</p>
+                            <p className="text-sm text-foreground/80">Ask true fans to &quot;unlock&quot; a link just to support your work.</p>
                         </div>
                     </div>
                 </div>
@@ -67,7 +69,7 @@ export default function HowItWorksPage() {
                 <div className="py-8 md:py-10 border-t border-border space-y-6">
                     <div className="text-center space-y-2">
                         <h2 className="text-2xl md:text-3xl font-bold">Is BaseLock right for me?</h2>
-                        <p className="text-muted-foreground">BaseLock is built for speed and friction-free commerce.</p>
+                        <p className="text-foreground/80">BaseLock is built for speed and friction-free commerce.</p>
                     </div>
 
                     <div className="grid md:grid-cols-2 gap-6">
@@ -98,16 +100,16 @@ export default function HowItWorksPage() {
 
                     <div className="text-center bg-secondary/30 p-4 rounded-xl">
                         <p className="font-medium text-foreground">
-                            "Think of BaseLock as a digital vending machine. Quick, easy, and direct."
+                            &quot;Think of BaseLock as a digital vending machine. Quick, easy, and direct.&quot;
                         </p>
                     </div>
                 </div>
 
                 {/* FAQ Section */}
                 <div className="space-y-6 pt-8 md:pt-10 border-t border-border">
-                    <div className="bg-blue-500/10 border border-blue-500/20 rounded-2xl p-6 md:p-8 text-center space-y-3">
+                    <div className="bg-primary/10 border border-primary/20 rounded-2xl p-6 md:p-8 text-center space-y-3">
                         <h2 className="text-2xl md:text-3xl font-bold">The Digital Vending Machine for Web3.</h2>
-                        <p className="text-muted-foreground max-w-2xl mx-auto">
+                        <p className="text-foreground/80 max-w-2xl mx-auto">
                             Is it unhackable DRM? No. It’s a friction-free way to collect micro-payments for low-ticket items, deposits, and instant access. Quick, easy, and direct to your wallet.
                         </p>
                     </div>
@@ -116,19 +118,19 @@ export default function HowItWorksPage() {
                     <div className="grid gap-3 md:gap-4 md:grid-cols-2">
                         <div className="p-4 md:p-6 bg-secondary/20 rounded-xl">
                             <h4 className="font-semibold mb-1 md:mb-2 text-sm md:text-base">Does BaseLock take a fee?</h4>
-                            <p className="text-muted-foreground text-xs md:text-sm">We take a flat 1% protocol fee on successful transactions to maintain the platform. There are no monthly costs.</p>
+                            <p className="text-foreground/80 text-xs md:text-sm">We take a flat 1% protocol fee on successful transactions to maintain the platform. There are no monthly costs.</p>
                         </div>
                         <div className="p-4 md:p-6 bg-secondary/20 rounded-xl">
                             <h4 className="font-semibold mb-1 md:mb-2 text-sm md:text-base">Can buyers share the link after buying?</h4>
-                            <p className="text-muted-foreground text-xs md:text-sm">Yes. Once revealed, the link is theirs. BaseLock is designed for convenience and speed, not enterprise-grade DRM. It is perfect for communities, deposits, and supporters.</p>
+                            <p className="text-foreground/80 text-xs md:text-sm">Yes. Once revealed, the link is theirs. BaseLock is designed for convenience and speed, not enterprise-grade DRM. It is perfect for communities, deposits, and supporters.</p>
                         </div>
                         <div className="p-4 md:p-6 bg-secondary/20 rounded-xl">
                             <h4 className="font-semibold mb-1 md:mb-2 text-sm md:text-base">Do buyers need a wallet?</h4>
-                            <p className="text-muted-foreground text-xs md:text-sm">Yes, they need a Web3 wallet (like Coinbase Wallet, MetaMask, or Rainbow) connected to the Base network to pay.</p>
+                            <p className="text-foreground/80 text-xs md:text-sm">Yes, they need a Web3 wallet (like Coinbase Wallet, MetaMask, or Rainbow) connected to the Base network to pay.</p>
                         </div>
                         <div className="p-4 md:p-6 bg-secondary/20 rounded-xl">
                             <h4 className="font-semibold mb-1 md:mb-2 text-sm md:text-base">Can I edit a link?</h4>
-                            <p className="text-muted-foreground text-xs md:text-sm">Currently, links are immutable once created. If you made a mistake, simply create a new link.</p>
+                            <p className="text-foreground/80 text-xs md:text-sm">Currently, links are immutable once created. If you made a mistake, simply create a new link.</p>
                         </div>
                     </div>
                 </div>

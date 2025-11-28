@@ -33,6 +33,7 @@ export function Navbar() {
     });
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setMounted(true);
     }, []);
 
@@ -43,14 +44,13 @@ export function Navbar() {
         { name: 'Feedback', href: '/feedback' },
     ];
 
-    if (isConnected && address && ownerAddress && address.toLowerCase() === ownerAddress.toLowerCase()) {
+    if (isConnected && address && ownerAddress && typeof ownerAddress === 'string' && address.toLowerCase() === ownerAddress.toLowerCase()) {
         tabs.push({ name: 'Admin', href: '/admin' });
     }
 
     return (
         <nav className="w-full border-b border-border bg-background transition-colors duration-300 sticky top-0 z-50 backdrop-blur-md bg-background/80">
             <div className="px-4 md:px-6 flex flex-col md:flex-row md:items-center md:justify-between min-h-[4rem]">
-                {/* Top Row: Logo + Actions (Mobile) / Logo + Links + Actions (Desktop) */}
                 {/* Top Row: Logo + Actions (Mobile) / Logo + Links + Actions (Desktop) */}
                 <div className="flex items-center w-full h-14 md:h-auto">
                     {/* Logo */}
@@ -71,7 +71,7 @@ export function Navbar() {
                                     "px-4 py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap",
                                     pathname === tab.href
                                         ? "bg-primary/10 text-primary"
-                                        : "text-muted-foreground hover:text-foreground hover:bg-secondary"
+                                        : "text-muted-foreground hover:text-primary hover:bg-primary/5"
                                 )}
                             >
                                 {tab.name}

@@ -20,7 +20,7 @@ export const Button: React.FC<ButtonProps> = ({
     const baseStyles = "w-full font-semibold py-3 rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 border border-transparent hover-glow cursor-pointer";
 
     const variants = {
-        primary: "bg-primary hover:bg-primary/90 text-primary-foreground shadow-sm hover:shadow-md border border-primary/20",
+        primary: "bg-primary hover:bg-primary/90 text-primary-foreground shadow-sm border border-primary/20",
         secondary: "bg-secondary hover:bg-secondary/80 text-secondary-foreground border border-border hover:border-primary/50",
         success: "bg-green-600 hover:bg-green-500 text-white shadow-sm hover:shadow-md", // Keeping green for success as it's specific
         danger: "bg-destructive hover:bg-destructive/90 text-destructive-foreground shadow-sm hover:shadow-md",

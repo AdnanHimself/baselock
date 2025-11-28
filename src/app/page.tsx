@@ -1,13 +1,14 @@
+
 'use client';
 
 import { useState } from 'react';
-import { ConnectButton } from '@rainbow-me/rainbowkit';
-import { supabase } from '@/lib/supabase';
 import { useAccount } from 'wagmi';
-import { Loader2, Lock, Link as LinkIcon, Copy, Check, Zap, Shield, Globe } from 'lucide-react';
+import { Link as LinkIcon, Copy, Check, Zap, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { useToast } from '@/components/ui/Toast';
-import { cn } from '@/lib/utils';
+import { UseCaseCard } from "@/components/UseCaseCard";
+
+import Link from 'next/link';
 
 export default function Home() {
   const { address, isConnected } = useAccount();
@@ -73,10 +74,10 @@ export default function Home() {
 
             {/* Hero Section */}
             <div className="space-y-8 max-w-4xl mx-auto text-center pt-8 md:pt-12">
-              <h1 className="text-5xl md:text-7xl font-bold tracking-tight bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 bg-clip-text text-transparent">
+              <h1 className="text-4xl md:text-7xl font-bold tracking-tight bg-gradient-to-r from-primary to-blue-600 dark:from-primary dark:to-blue-400 bg-clip-text text-transparent pb-2">
                 Make Any Link Pay.
               </h1>
-              <p className="text-xl md:text-2xl text-muted-foreground leading-relaxed max-w-2xl mx-auto">
+              <p className="text-lg md:text-2xl text-foreground/80 leading-relaxed max-w-2xl mx-auto">
                 Turn any URL into a digital product in seconds. Simply lock your content, set a price, and start selling.
               </p>
 
@@ -87,12 +88,12 @@ export default function Home() {
                 >
                   Start Monetizing
                 </Button>
-                <a
+                <Link
                   href="/how-it-works"
                   className="w-full sm:w-auto px-8 py-4 text-lg font-semibold rounded-xl border border-border hover:bg-secondary/50 transition-colors text-center"
                 >
                   How it Works
-                </a>
+                </Link>
               </div>
               <p className="text-sm text-muted-foreground">Get paid instantly in ETH or USDC.</p>
             </div>
@@ -104,21 +105,21 @@ export default function Home() {
                   <Zap className="w-8 h-8 text-yellow-500" />
                 </div>
                 <h3 className="text-lg font-bold">Direct Payouts</h3>
-                <p className="text-muted-foreground text-sm px-4">Funds go straight to your wallet. No holding periods.</p>
+                <p className="text-foreground/80 text-sm px-4">Funds go straight to your wallet. No holding periods.</p>
               </div>
               <div className="text-center space-y-2">
                 <div className="flex justify-center mb-2">
                   <Shield className="w-8 h-8 text-green-500" />
                 </div>
                 <h3 className="text-lg font-bold">Zero Friction</h3>
-                <p className="text-muted-foreground text-sm px-4">Buyers pay and reveal in one click. No accounts needed.</p>
+                <p className="text-foreground/80 text-sm px-4">Buyers pay and reveal in one click. No accounts needed.</p>
               </div>
               <div className="text-center space-y-2">
                 <div className="flex justify-center mb-2">
-                  <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold text-xs">B</div>
+                  <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white font-bold text-xs">B</div>
                 </div>
                 <h3 className="text-lg font-bold">Base Native</h3>
-                <p className="text-muted-foreground text-sm px-4">Built for low gas fees and lightning-fast transactions.</p>
+                <p className="text-foreground/80 text-sm px-4">Built for low gas fees and lightning-fast transactions.</p>
               </div>
             </div>
 
@@ -132,7 +133,7 @@ export default function Home() {
               <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 text-left">
                 <UseCaseCard
                   icon="🚀"
-                  title="Exclusive 'Alpha'"
+                  title="Exclusive &apos;Alpha&apos;"
                   description="Sell time-sensitive trading insights or market analysis. The value is in the speed."
                 />
                 <UseCaseCard
@@ -157,7 +158,7 @@ export default function Home() {
             <div className="py-12 bg-card border border-border rounded-3xl p-8 md:p-12 text-left">
               <div className="max-w-3xl mx-auto space-y-6">
                 <h2 className="text-3xl font-bold">Built for Speed, Not Bureaucracy.</h2>
-                <p className="text-lg text-muted-foreground leading-relaxed">
+                <p className="text-lg text-foreground/80 leading-relaxed">
                   BaseLock is designed as a digital cash register, not a bank vault. It is the fastest way to facilitate honest exchanges between you and your audience.
                 </p>
                 <ul className="space-y-3">
@@ -171,7 +172,7 @@ export default function Home() {
                   </li>
                   <li className="flex items-center gap-3">
                     <Check className="w-5 h-5 text-green-500 flex-shrink-0" />
-                    <span>Proven "Pay-what-you-want" psychology.</span>
+                    <span>Proven &quot;Pay-what-you-want&quot; psychology.</span>
                   </li>
                 </ul>
               </div>
@@ -289,22 +290,4 @@ export default function Home() {
   );
 }
 
-function FeatureCard({ icon, title, description }: { icon: React.ReactNode, title: string, description: string }) {
-  return (
-    <div className="p-6 rounded-2xl bg-secondary/30 border border-border/50 hover:bg-secondary/50 transition-colors text-left">
-      <div className="mb-4 p-3 bg-background rounded-xl w-fit border border-border/50 shadow-sm">{icon}</div>
-      <h3 className="text-lg font-semibold text-foreground mb-2">{title}</h3>
-      <p className="text-sm text-muted-foreground">{description}</p>
-    </div>
-  );
-}
 
-function UseCaseCard({ icon, title, description }: { icon: string, title: string, description: string }) {
-  return (
-    <div className="p-4 rounded-xl bg-secondary/20 border border-border/50 hover:bg-secondary/40 transition-colors">
-      <div className="text-2xl mb-2">{icon}</div>
-      <h3 className="font-semibold mb-1">{title}</h3>
-      <p className="text-sm text-muted-foreground">{description}</p>
-    </div>
-  );
-}
