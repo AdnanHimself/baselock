@@ -4,9 +4,10 @@ import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useRouter } from 'next/navigation';
 import { useAccount, useReadContract, useWriteContract } from 'wagmi';
-import { Wallet, Users, MessageSquare, Settings, ShieldAlert, Loader2, DollarSign, Activity } from 'lucide-react';
+import { Wallet, Users, MessageSquare, Settings, ShieldAlert, Loader2, DollarSign, Activity, Link as LinkIcon, Search } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { formatDistanceToNow } from 'date-fns';
+import { LinksTab } from './LinksTab';
 
 // Placeholder for V2 Contract Address - User needs to update this after deployment
 const CONTRACT_ADDRESS_V2 = '0x5CB532D8799b36a6E5dfa1663b6cFDDdDB431405';
@@ -118,6 +119,12 @@ export default function AdminDashboard() {
                             label="Feedback"
                         />
                         <TabButton
+                            active={activeTab === 'links'}
+                            onClick={() => setActiveTab('links')}
+                            icon={<LinkIcon className="w-4 h-4 md:w-5 md:h-5" />}
+                            label="All Links"
+                        />
+                        <TabButton
                             active={activeTab === 'users'}
                             onClick={() => setActiveTab('users')}
                             icon={<Users className="w-4 h-4 md:w-5 md:h-5" />}
@@ -131,6 +138,7 @@ export default function AdminDashboard() {
                         {activeTab === 'sales' && <SalesTab supabase={supabase} />}
                         {activeTab === 'fees' && <FeesTab />}
                         {activeTab === 'feedback' && <FeedbackTab supabase={supabase} />}
+                        {activeTab === 'links' && <LinksTab supabase={supabase} />}
                         {activeTab === 'users' && <UsersTab />}
                     </main>
                 </div>
@@ -144,7 +152,7 @@ function TabButton({ active, onClick, icon, label }: any) {
         <button
             onClick={onClick}
             className={cn(
-                "flex-shrink-0 md:w-full flex items-center gap-2 md:gap-3 px-3 py-2 md:px-4 md:py-3 rounded-xl transition-all text-left text-sm md:text-base",
+                "flex-shrink-0 md:w-full flex items-center gap-2 md:gap-3 px-3 py-2 md:px-4 md:py-3 rounded-xl transition-all text-left text-sm md:text-base cursor-pointer",
                 active
                     ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20"
                     : "hover:bg-secondary text-muted-foreground hover:text-foreground bg-secondary/10 md:bg-transparent"
