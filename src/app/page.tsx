@@ -72,69 +72,108 @@ export default function Home() {
           <div className="text-center space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-500 px-4">
 
             {/* Hero Section */}
-            <div className="space-y-6 max-w-3xl mx-auto">
-              <div className="flex justify-center mb-6">
-                <img src="/hero_grafik.png" alt="BaseLock Hero" className="w-full max-w-[280px] md:max-w-[320px] mx-auto object-contain drop-shadow-2xl" />
-              </div>
-              <h1 className="text-4xl md:text-6xl font-bold tracking-tight bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 bg-clip-text text-transparent">
-                Make any Link Pay
+            <div className="space-y-8 max-w-4xl mx-auto text-center pt-8 md:pt-12">
+              <h1 className="text-5xl md:text-7xl font-bold tracking-tight bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 bg-clip-text text-transparent">
+                Make Any Link Pay.
               </h1>
-              <p className="text-lg md:text-xl text-muted-foreground leading-relaxed max-w-2xl mx-auto">
-                The friction-free way to sell digital content on Base. No signups, no subscriptions, direct crypto settlements.
+              <p className="text-xl md:text-2xl text-muted-foreground leading-relaxed max-w-2xl mx-auto">
+                Stop DMing your wallet address. Lock content behind a payment gate and sell it instantly. No signups, no subscriptions, just direct revenue on Base.
               </p>
+
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
+                <Button
+                  className="w-full sm:w-auto px-8 py-4 text-lg h-auto"
+                  onClick={() => document.getElementById('create-link-form')?.scrollIntoView({ behavior: 'smooth' })}
+                >
+                  Start Monetizing
+                </Button>
+                <a
+                  href="/how-it-works"
+                  className="w-full sm:w-auto px-8 py-4 text-lg font-semibold rounded-xl border border-border hover:bg-secondary/50 transition-colors text-center"
+                >
+                  How it Works
+                </a>
+              </div>
+              <p className="text-sm text-muted-foreground">Settles instantly in ETH or USDC.</p>
             </div>
 
-            {/* Why BaseLock? */}
-            <div className="py-8 space-y-4 max-w-2xl mx-auto">
-              <h2 className="text-2xl md:text-3xl font-bold">Stop DMing your wallet address.</h2>
-              <p className="text-muted-foreground text-lg">
-                Manual sales are slow. BaseLock is your automated digital cashier. Perfect for impulse buys and time-sensitive drops.
-              </p>
-            </div>
-
-            {/* Feature Cards (The "3 Fields") */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
-              <FeatureCard
-                icon={<Zap className="w-6 h-6 text-yellow-500 dark:text-yellow-400" />}
-                title="Instant Payouts"
-                description="Forget monthly wait times. Funds hit your wallet the second a sale is made. No middleman holding your money."
-              />
-              <FeatureCard
-                icon={<Shield className="w-6 h-6 text-green-500 dark:text-green-400" />}
-                title="Pay-to-Reveal"
-                description="Users pay crypto to reveal your content instantly. Simple, fast, and permissionless."
-              />
-              <FeatureCard
-                icon={<Globe className="w-6 h-6 text-blue-500 dark:text-blue-400" />}
-                title="Sell Globally"
-                description="Reach customers anywhere in the world. No banking borders."
-              />
+            {/* Value Proposition Bar */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 py-12 border-y border-border/50 bg-secondary/10">
+              <div className="text-center space-y-2">
+                <div className="flex justify-center mb-2">
+                  <Zap className="w-8 h-8 text-yellow-500" />
+                </div>
+                <h3 className="text-lg font-bold">Direct Payouts</h3>
+                <p className="text-muted-foreground text-sm px-4">Funds go straight to your wallet. No holding periods.</p>
+              </div>
+              <div className="text-center space-y-2">
+                <div className="flex justify-center mb-2">
+                  <Shield className="w-8 h-8 text-green-500" />
+                </div>
+                <h3 className="text-lg font-bold">Zero Friction</h3>
+                <p className="text-muted-foreground text-sm px-4">Buyers pay and reveal in one click. No accounts needed.</p>
+              </div>
+              <div className="text-center space-y-2">
+                <div className="flex justify-center mb-2">
+                  <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold text-xs">B</div>
+                </div>
+                <h3 className="text-lg font-bold">Base Native</h3>
+                <p className="text-muted-foreground text-sm px-4">Built for low gas fees and lightning-fast transactions.</p>
+              </div>
             </div>
 
             {/* Use Cases Section */}
-            <div className="pt-8 space-y-8">
-              <h2 className="text-2xl font-bold text-center">What can you lock?</h2>
-              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 text-left">
+            <div className="space-y-10">
+              <div className="text-center space-y-2">
+                <h2 className="text-3xl font-bold">What can you sell with BaseLock?</h2>
+                <p className="text-muted-foreground text-lg">Perfect for micro-transactions and time-sensitive value.</p>
+              </div>
+
+              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 text-left">
                 <UseCaseCard
                   icon="🚀"
-                  title="Alpha & Leaks"
-                  description="Monetize time-sensitive info. First come, first served."
+                  title="Exclusive 'Alpha'"
+                  description="Sell time-sensitive trading insights or market analysis. The value is in the speed."
                 />
                 <UseCaseCard
                   icon="🤝"
                   title="Consultation Deposits"
-                  description="Take a deposit before booking a call. Filter out time-wasters."
+                  description="Stop no-shows. Send a locked Calendly link that requires a $50 deposit to book."
                 />
                 <UseCaseCard
                   icon="💬"
                   title="Community Access"
-                  description="Paid invite links for Telegram, Discord, or private groups."
+                  description="Gate your Telegram or Discord invite links. Filter out bots and verify supporters."
                 />
                 <UseCaseCard
                   icon="📂"
                   title="Digital Downloads"
-                  description="Sell templates, presets, or files instantly."
+                  description="Presets, templates, or checklists. Low-cost tools that users are happy to pay for."
                 />
+              </div>
+            </div>
+
+            {/* Philosophy / Reality Check */}
+            <div className="py-12 bg-card border border-border rounded-3xl p-8 md:p-12 text-left">
+              <div className="max-w-3xl mx-auto space-y-6">
+                <h2 className="text-3xl font-bold">Built for Speed, Not Bureaucracy.</h2>
+                <p className="text-lg text-muted-foreground leading-relaxed">
+                  BaseLock is designed as a digital cash register, not a bank vault. It is the fastest way to facilitate honest exchanges between you and your audience.
+                </p>
+                <ul className="space-y-3">
+                  <li className="flex items-center gap-3">
+                    <Check className="w-5 h-5 text-green-500 flex-shrink-0" />
+                    <span>Optimized for items between $1 - $100.</span>
+                  </li>
+                  <li className="flex items-center gap-3">
+                    <Check className="w-5 h-5 text-green-500 flex-shrink-0" />
+                    <span>Simple Pay-to-Reveal mechanics (no DRM).</span>
+                  </li>
+                  <li className="flex items-center gap-3">
+                    <Check className="w-5 h-5 text-green-500 flex-shrink-0" />
+                    <span>Proven "Pay-what-you-want" psychology.</span>
+                  </li>
+                </ul>
               </div>
             </div>
 
@@ -182,7 +221,7 @@ export default function Home() {
               <h1 className="text-3xl font-bold tracking-tight">Create Lock</h1>
               <p className="text-muted-foreground">Set a price for your secret content.</p>
             </div>
-            <form onSubmit={handleCreate} className="bg-card border border-border rounded-2xl p-6 space-y-6 shadow-sm">
+            <form id="create-link-form" onSubmit={handleCreate} className="bg-card border border-border rounded-2xl p-6 space-y-6 shadow-sm">
               <div className="space-y-2">
                 <label className="text-sm font-medium text-foreground">Target URL</label>
                 <input

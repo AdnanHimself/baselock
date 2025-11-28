@@ -2,9 +2,9 @@ export default function HowItWorksPage() {
     return (
         <main className="min-h-[calc(100vh-7rem)] bg-background text-foreground p-4 md:p-8 transition-colors">
             <div className="max-w-2xl mx-auto space-y-8 md:space-y-10">
-                <div className="space-y-3 md:space-y-4">
-                    <h1 className="text-3xl md:text-4xl font-bold">How BaseLock Works</h1>
-                    <p className="text-lg md:text-xl text-muted-foreground">Monetize your digital content in 3 simple steps.</p>
+                <div className="space-y-3 md:space-y-4 text-center">
+                    <h1 className="text-3xl md:text-5xl font-bold">Monetize in 30 Seconds.</h1>
+                    <p className="text-lg md:text-xl text-muted-foreground">Turn any link into a product.</p>
                 </div>
 
                 <div className="grid gap-4 md:gap-6">
@@ -14,13 +14,8 @@ export default function HowItWorksPage() {
                         <div className="space-y-2 md:space-y-3">
                             <h3 className="text-xl md:text-2xl font-semibold text-foreground group-hover:text-primary transition-colors">Lock It</h3>
                             <p className="text-muted-foreground text-sm md:text-base">
-                                Paste the link to your secret content. This could be a Google Drive folder, a Notion page, a Dropbox file, or an unlisted YouTube video.
+                                Paste the link to your content (Google Drive, Notion, Calendly, unlisted YouTube video). Set your price in USDC or ETH.
                             </p>
-                            <ul className="list-disc list-inside text-muted-foreground text-sm md:text-base space-y-1 ml-2">
-                                <li>Set a price in USDC (e.g., $10).</li>
-                                <li>Give your link a catchy title.</li>
-                                <li>The content is hidden until purchased.</li>
-                            </ul>
                         </div>
                     </div>
 
@@ -30,14 +25,8 @@ export default function HowItWorksPage() {
                         <div className="space-y-2 md:space-y-3">
                             <h3 className="text-xl md:text-2xl font-semibold text-foreground group-hover:text-primary transition-colors">Share It</h3>
                             <p className="text-muted-foreground text-sm md:text-base">
-                                You get a unique BaseLock link (e.g., <code>baselock.xyz/xyz123</code>). Share this link anywhere:
+                                We generate a unique baselock.xyz link. Post it on Farcaster, Twitter, or send it via DM.
                             </p>
-                            <div className="flex gap-2 flex-wrap">
-                                <span className="px-2.5 py-1 bg-secondary rounded-full text-xs md:text-sm">Twitter / X</span>
-                                <span className="px-2.5 py-1 bg-secondary rounded-full text-xs md:text-sm">Discord</span>
-                                <span className="px-2.5 py-1 bg-secondary rounded-full text-xs md:text-sm">Telegram</span>
-                                <span className="px-2.5 py-1 bg-secondary rounded-full text-xs md:text-sm">Email</span>
-                            </div>
                         </div>
                     </div>
 
@@ -47,14 +36,29 @@ export default function HowItWorksPage() {
                         <div className="space-y-2 md:space-y-3">
                             <h3 className="text-xl md:text-2xl font-semibold text-foreground group-hover:text-primary transition-colors">Profit</h3>
                             <p className="text-muted-foreground text-sm md:text-base">
-                                When someone clicks your link, they see a payment screen.
+                                Users pay to unlock the link. The crypto hits your wallet instantly. No middlemen, no waiting.
                             </p>
-                            <ul className="list-disc list-inside text-muted-foreground text-sm md:text-base space-y-1 ml-2">
-                                <li>They pay in <strong>USDC</strong> or <strong>ETH</strong>.</li>
-                                <li>The smart contract verifies the payment.</li>
-                                <li>The funds are sent <strong>instantly</strong> to your wallet.</li>
-                                <li>The buyer gets access to your secret link.</li>
-                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Pro Tips */}
+                <div className="bg-secondary/20 border border-border rounded-2xl p-6 md:p-8 space-y-6">
+                    <h2 className="text-2xl font-bold flex items-center gap-2">
+                        <span className="text-yellow-500">💡</span> How to maximize sales
+                    </h2>
+                    <div className="grid gap-6 md:grid-cols-3">
+                        <div className="space-y-2">
+                            <h3 className="font-semibold">Keep it accessible</h3>
+                            <p className="text-sm text-muted-foreground">BaseLock works best for impulse buys ($1 - $20).</p>
+                        </div>
+                        <div className="space-y-2">
+                            <h3 className="font-semibold">Describe the value</h3>
+                            <p className="text-sm text-muted-foreground">Since users can't see the content yet, clearly state what they are buying.</p>
+                        </div>
+                        <div className="space-y-2">
+                            <h3 className="font-semibold">Proof of Support</h3>
+                            <p className="text-sm text-muted-foreground">Ask true fans to "unlock" a link just to support your work.</p>
                         </div>
                     </div>
                 </div>
@@ -101,23 +105,30 @@ export default function HowItWorksPage() {
 
                 {/* FAQ Section */}
                 <div className="space-y-6 pt-8 md:pt-10 border-t border-border">
-                    <h2 className="text-2xl md:text-3xl font-bold text-center">Frequently Asked Questions</h2>
+                    <div className="bg-blue-500/10 border border-blue-500/20 rounded-2xl p-6 md:p-8 text-center space-y-3">
+                        <h2 className="text-2xl md:text-3xl font-bold">The Digital Vending Machine for Web3.</h2>
+                        <p className="text-muted-foreground max-w-2xl mx-auto">
+                            Is it unhackable DRM? No. It’s a friction-free way to collect micro-payments for low-ticket items, deposits, and instant access. Quick, easy, and direct to your wallet.
+                        </p>
+                    </div>
+
+                    <h2 className="text-2xl font-bold text-center pt-4">Frequently Asked Questions</h2>
                     <div className="grid gap-3 md:gap-4 md:grid-cols-2">
                         <div className="p-4 md:p-6 bg-secondary/20 rounded-xl">
-                            <h4 className="font-semibold mb-1 md:mb-2 text-sm md:text-base">Is it secure?</h4>
-                            <p className="text-muted-foreground text-xs md:text-sm">Yes. Your secret link is stored securely and only revealed to the buyer after the blockchain confirms the payment.</p>
+                            <h4 className="font-semibold mb-1 md:mb-2 text-sm md:text-base">Does BaseLock take a fee?</h4>
+                            <p className="text-muted-foreground text-xs md:text-sm">We take a flat 1% protocol fee on successful transactions to maintain the platform. There are no monthly costs.</p>
                         </div>
                         <div className="p-4 md:p-6 bg-secondary/20 rounded-xl">
-                            <h4 className="font-semibold mb-1 md:mb-2 text-sm md:text-base">What are the fees?</h4>
-                            <p className="text-muted-foreground text-xs md:text-sm">BaseLock takes a small 1% fee on each transaction to maintain the platform. You keep 99%.</p>
+                            <h4 className="font-semibold mb-1 md:mb-2 text-sm md:text-base">Can buyers share the link after buying?</h4>
+                            <p className="text-muted-foreground text-xs md:text-sm">Yes. Once revealed, the link is theirs. BaseLock is designed for convenience and speed, not enterprise-grade DRM. It is perfect for communities, deposits, and supporters.</p>
+                        </div>
+                        <div className="p-4 md:p-6 bg-secondary/20 rounded-xl">
+                            <h4 className="font-semibold mb-1 md:mb-2 text-sm md:text-base">Do buyers need a wallet?</h4>
+                            <p className="text-muted-foreground text-xs md:text-sm">Yes, they need a Web3 wallet (like Coinbase Wallet, MetaMask, or Rainbow) connected to the Base network to pay.</p>
                         </div>
                         <div className="p-4 md:p-6 bg-secondary/20 rounded-xl">
                             <h4 className="font-semibold mb-1 md:mb-2 text-sm md:text-base">Can I edit a link?</h4>
                             <p className="text-muted-foreground text-xs md:text-sm">Currently, links are immutable once created. If you made a mistake, simply create a new link.</p>
-                        </div>
-                        <div className="p-4 md:p-6 bg-secondary/20 rounded-xl">
-                            <h4 className="font-semibold mb-1 md:mb-2 text-sm md:text-base">Do I need a wallet?</h4>
-                            <p className="text-muted-foreground text-xs md:text-sm">Yes, you need a crypto wallet (like MetaMask or Coinbase Wallet) on the Base network to receive payments.</p>
                         </div>
                     </div>
                 </div>
