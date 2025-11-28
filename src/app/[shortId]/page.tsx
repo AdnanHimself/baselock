@@ -8,7 +8,7 @@ import { parseUnits, parseEther } from 'viem';
 import { supabase } from '@/lib/supabase';
 import { Button } from '@/components/ui/Button';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Lock, Unlock, AlertCircle, Loader2, CheckCircle2, CreditCard, Coins, Copy, ExternalLink } from 'lucide-react';
+import { Lock, Unlock, AlertCircle, Loader2, CheckCircle2, CreditCard, Coins, Copy, ExternalLink, Download } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/components/ui/Toast';
 
@@ -410,6 +410,32 @@ export default function UnlockPage() {
                                     <Copy className="w-4 h-4" />
                                 </button>
                             </div>
+                        ) : linkData.content_type === 'image' ? (
+                            <div className="rounded-xl overflow-hidden border border-border bg-secondary/50 space-y-2">
+                                <img
+                                    src={linkData.target_url}
+                                    alt="Unlocked Content"
+                                    loading="lazy"
+                                    className="w-full h-auto max-h-96 object-contain bg-black/50"
+                                />
+                                <div className="p-2 flex justify-center">
+                                    <Button
+                                        onClick={() => window.open(linkData.target_url, '_blank')}
+                                        className="w-full"
+                                    >
+                                        <Download className="w-4 h-4 mr-2" />
+                                        Download Image
+                                    </Button>
+                                </div>
+                            </div>
+                        ) : linkData.content_type === 'file' ? (
+                            <Button
+                                className="w-full gap-2 text-lg h-12 md:h-14 shadow-lg shadow-primary/20 hover:shadow-primary/40 transition-all"
+                                onClick={() => window.open(linkData.target_url, '_blank')}
+                            >
+                                <Download className="w-5 h-5" />
+                                Download File
+                            </Button>
                         ) : (
                             <Button
                                 className="w-full gap-2 text-lg h-12 md:h-14 shadow-lg shadow-primary/20 hover:shadow-primary/40 transition-all"

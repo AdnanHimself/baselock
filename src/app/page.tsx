@@ -2,8 +2,8 @@
 'use client';
 
 import { useState } from 'react';
-import { useAccount } from 'wagmi';
-import { Link as LinkIcon, Copy, Check, Zap, Shield } from 'lucide-react';
+import { useAccount, useSignMessage } from 'wagmi';
+import { Link as LinkIcon, Copy, Upload, Check, Zap, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { useToast } from '@/components/ui/Toast';
 import { UseCaseCard } from "@/components/UseCaseCard";
@@ -12,9 +12,11 @@ import Link from 'next/link';
 
 export default function Home() {
   const { address, isConnected } = useAccount();
+  const { signMessageAsync } = useSignMessage();
   const { showToast } = useToast();
   const [targetUrl, setTargetUrl] = useState('');
-  const [contentType, setContentType] = useState<'url' | 'text'>('url');
+  const [contentType, setContentType] = useState<'url' | 'text' | 'file'>('url');
+  const [file, setFile] = useState<File | null>(null);
   const [price, setPrice] = useState('');
   const [title, setTitle] = useState('');
   const [loading, setLoading] = useState(false);
@@ -33,17 +35,41 @@ export default function Home() {
     const slug = generateSlug();
 
     try {
-      const response = await fetch('/api/create', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          slug: slug, // Assuming `slug` is the generated one, as `customSlug` is not defined.
+      // 1. Sign Message for Security (DoS Protection)
+      const message = `Create Lock: ${slug} `;
+      const signature = await signMessageAsync({ message });
+
+      let body;
+      const headers: Record<string, string> = {
+        'x-signature': signature,
+        'x-address': address,
+      };
+
+      if (contentType === 'file' && file) {
+        const formData = new FormData();
+        formData.append('slug', slug);
+        formData.append('title', title || '');
+        formData.append('price', price);
+        formData.append('receiver_address', address);
+        formData.append('content_type', file.type.startsWith('image/') ? 'image' : 'file');
+        formData.append('file', file);
+        body = formData;
+      } else {
+        headers['Content-Type'] = 'application/json';
+        body = JSON.stringify({
+          slug: slug,
           title: title || undefined,
-          price: parseFloat(price), // Keep parseFloat as it was in the original
+          price: parseFloat(price),
           receiver_address: address,
           target_url: targetUrl,
           content_type: contentType
-        }),
+        });
+      }
+
+      const response = await fetch('/api/create', {
+        method: 'POST',
+        headers: headers,
+        body: body,
       });
 
       const data = await response.json();
@@ -53,12 +79,13 @@ export default function Home() {
       setCreatedLink(`${window.location.origin}/${slug}`);
       showToast('Link created successfully!', 'success');
     } catch (err) {
-      console.error('Error creating link:', err);
-      showToast('Failed to create link. Please try again.', 'error');
+      console.error(err);
+      showToast('Failed to create link', 'error');
     } finally {
       setLoading(false);
     }
-  };
+  }
+
 
   const copyToClipboard = () => {
     if (createdLink) {
@@ -69,7 +96,7 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-[calc(100vh-7rem)] flex flex-col items-center justify-center p-4 bg-background text-foreground transition-colors">
+    <main className="min-h-[calc(100vh-7rem)] flex flex-col items-center justify-start pt-12 md:pt-24 p-4 bg-background text-foreground transition-colors">
       <div className="w-full max-w-5xl space-y-12 py-8">
         {!isConnected ? (
           <div className="text-center space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-500 px-4">
@@ -247,11 +274,21 @@ export default function Home() {
                 >
                   Text / Code
                 </button>
+                <button
+                  type="button"
+                  onClick={() => setContentType('file')}
+                  className={`flex-1 py-2 text-sm font-medium rounded-lg transition-all ${contentType === 'file'
+                    ? 'bg-background text-foreground shadow-sm'
+                    : 'text-muted-foreground hover:text-foreground'
+                    }`}
+                >
+                  File / Image
+                </button>
               </div>
 
               <div className="space-y-2">
                 <label className="text-sm font-medium text-muted-foreground">
-                  {contentType === 'url' ? 'Target URL' : 'Secret Content'}
+                  {contentType === 'url' ? 'Target URL' : contentType === 'text' ? 'Secret Content' : 'Upload File'}
                 </label>
                 {contentType === 'url' ? (
                   <div className="relative">
@@ -265,7 +302,7 @@ export default function Home() {
                       required
                     />
                   </div>
-                ) : (
+                ) : contentType === 'text' ? (
                   <div className="relative">
                     <textarea
                       placeholder="Enter secret text, code, or private keys..."
@@ -274,6 +311,38 @@ export default function Home() {
                       className="w-full p-4 bg-input/10 border border-input rounded-xl focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all min-h-[120px] font-mono text-sm"
                       required
                     />
+                  </div>
+                ) : (
+                  <div className="relative">
+                    <div className="border-2 border-dashed border-input rounded-xl p-8 text-center hover:bg-secondary/50 transition-colors cursor-pointer relative">
+                      <input
+                        type="file"
+                        accept="image/*,application/pdf"
+                        onChange={(e) => {
+                          const selectedFile = e.target.files?.[0];
+                          if (selectedFile) {
+                            if (selectedFile.size > 50 * 1024 * 1024) {
+                              showToast('File size exceeds 50MB limit', 'error');
+                              e.target.value = ''; // Clear input
+                              setFile(null);
+                            } else {
+                              setFile(selectedFile);
+                            }
+                          } else {
+                            setFile(null);
+                          }
+                        }}
+                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                        required
+                      />
+                      <div className="flex flex-col items-center gap-2 text-muted-foreground">
+                        <Upload className="w-8 h-8" />
+                        <span className="text-sm font-medium">
+                          {file ? file.name : "Click to upload or drag and drop"}
+                        </span>
+                        <span className="text-xs">Max 50MB (Images, PDF)</span>
+                      </div>
+                    </div>
                   </div>
                 )}
                 <p className="text-xs text-muted-foreground">The secret content users pay to see.</p>

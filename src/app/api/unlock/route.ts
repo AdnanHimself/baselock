@@ -161,21 +161,22 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: 'Content not found' }, { status: 404 });
         }
 
-        // 5. Update Sales Stats (Async - don't block response)
-        // We increment sales_count and set last_purchased_at
-        // Note: rpc() is better for atomic increments, but for now we'll just read-modify-write or assume low concurrency.
-        // Actually, Supabase doesn't have a simple atomic increment without a stored procedure.
-        // Let's create a stored procedure in the SQL file later if needed. For now, we'll just update.
-        // Wait, we can't easily do "sales_count = sales_count + 1" in a simple update call without RPC.
-        // Let's just fetch current count and update it, or better yet, just update last_purchased_at and we'll fix the count later with a proper RPC if needed.
-        // Actually, let's try to be robust. We can use the 'rpc' method if we had a function.
-        // Since we don't want to overcomplicate, let's just do a simple update.
-        // But wait, we already fetched 'link' in step 1. We can use that value + 1.
-        // It's not perfectly atomic but good enough for this MVP.
+        let finalTargetUrl = secret.target_url;
 
-        // Re-fetch to get latest count? No, let's just use what we have or do a blind update if possible.
-        // Supabase JS client doesn't support "increment" directly in update().
-        // Let's just update last_purchased_at for now and try to increment sales_count based on current known value.
+        // Generate Signed URL for files/images
+        if (secret.content_type === 'file' || secret.content_type === 'image') {
+            const { data: signedData, error: signedError } = await supabaseAdmin
+                .storage
+                .from('locked_content')
+                .createSignedUrl(secret.target_url, 3600); // 1 hour expiry
+
+            if (signedError) {
+                console.error('Error generating signed URL:', signedError);
+                return NextResponse.json({ error: 'Failed to generate access link' }, { status: 500 });
+            }
+
+            finalTargetUrl = signedData.signedUrl;
+        }
 
         // 5. Record Purchase and Update Stats
         const { error: purchaseError } = await supabaseAdmin
@@ -185,9 +186,6 @@ export async function POST(req: NextRequest) {
                 buyer_address: userAddress,
                 amount: parseFloat(link.price.toString()), // Storing as USDC value for consistency in stats
                 token_address: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913', // Defaulting to USDC for now as price is in USDC. 
-                // TODO: If we support ETH payments properly, we should store the actual token and amount paid.
-                // But since our price is denominated in USDC, and we verify against that, let's store the USDC value for simpler stats.
-                // Actually, let's store the REAL transaction hash to ensure uniqueness.
                 transaction_hash: txHash
             });
 
@@ -196,17 +194,25 @@ export async function POST(req: NextRequest) {
             // Don't fail the request if just recording stats fails, but log it.
         }
 
-        await supabaseAdmin
-            .from('links')
-            .update({
-                sales_count: (link.sales_count || 0) + 1,
-                last_purchased_at: new Date().toISOString()
-            })
-            .eq('id', linkId);
+        // Atomic increment using RPC
+        const { error: rpcError } = await supabaseAdmin
+            .rpc('increment_sales_count', { row_id: linkId });
+
+        if (rpcError) {
+            console.error('Error incrementing sales count:', rpcError);
+            // Fallback to manual update if RPC fails (e.g. function not created yet)
+            await supabaseAdmin
+                .from('links')
+                .update({
+                    sales_count: (link.sales_count || 0) + 1,
+                    last_purchased_at: new Date().toISOString()
+                })
+                .eq('id', linkId);
+        }
 
         return NextResponse.json({
             success: true,
-            targetUrl: secret.target_url,
+            targetUrl: finalTargetUrl,
             contentType: secret.content_type || 'url'
         });
 
