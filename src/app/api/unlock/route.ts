@@ -153,7 +153,7 @@ export async function POST(req: NextRequest) {
         // 4. Retrieve Secret Content
         const { data: secret, error: secretError } = await supabaseAdmin
             .from('secrets')
-            .select('target_url')
+            .select('target_url, content_type')
             .eq('link_id', linkId)
             .single();
 
@@ -204,7 +204,11 @@ export async function POST(req: NextRequest) {
             })
             .eq('id', linkId);
 
-        return NextResponse.json({ success: true, targetUrl: secret.target_url });
+        return NextResponse.json({
+            success: true,
+            targetUrl: secret.target_url,
+            contentType: secret.content_type || 'url'
+        });
 
     } catch (error) {
         console.error('Unlock API Error:', error);

@@ -1,16 +1,16 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { ConnectButton } from '@rainbow-me/rainbowkit';
-import { useAccount, useWriteContract, useWaitForTransactionReceipt, usePublicClient, useReadContract, useSignMessage } from 'wagmi';
-import { supabase } from '@/lib/supabase';
-import { Loader2, Lock, Unlock, Download, AlertCircle, CheckCircle2, Coins, CreditCard } from 'lucide-react';
-import { parseUnits, formatUnits, parseEther } from 'viem';
+import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
+import { ConnectButton } from '@rainbow-me/rainbowkit';
+import { useAccount, useWriteContract, useWaitForTransactionReceipt, useReadContract, usePublicClient, useSignMessage } from 'wagmi';
+import { parseUnits, parseEther } from 'viem';
+import { supabase } from '@/lib/supabase';
 import { Button } from '@/components/ui/Button';
-import { useToast } from '@/components/ui/Toast';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Lock, Unlock, AlertCircle, Loader2, CheckCircle2, CreditCard, Coins, Copy, ExternalLink } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useToast } from '@/components/ui/Toast';
 
 // Addresses
 const USDC_ADDRESS = '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913';
@@ -87,19 +87,17 @@ const ERC20_ABI = [
 export default function UnlockPage() {
     const { shortId } = useParams();
     const { address, isConnected } = useAccount();
-    const publicClient = usePublicClient();
-    const { showToast } = useToast();
-
     const [linkData, setLinkData] = useState<any>(null);
     const [loading, setLoading] = useState(true);
     const [hasAccess, setHasAccess] = useState(false);
     const [checkingAccess, setCheckingAccess] = useState(false);
     const [isApproving, setIsApproving] = useState(false);
-
-    // V2 Features
     const [paymentMethod, setPaymentMethod] = useState<'USDC' | 'ETH'>('USDC');
-    const [tipAmount, setTipAmount] = useState('');
     const [ethPrice, setEthPrice] = useState<number | null>(null);
+    const [tipAmount, setTipAmount] = useState('0');
+    const [contentType, setContentType] = useState<'url' | 'text'>('url');
+    const publicClient = usePublicClient();
+    const { showToast } = useToast();
 
     useEffect(() => {
         // Fetch ETH price
@@ -191,7 +189,7 @@ export default function UnlockPage() {
 
             if (!response.ok) throw new Error(data.error || 'Failed to unlock');
 
-            setLinkData((prev: any) => ({ ...prev, target_url: data.targetUrl }));
+            setLinkData((prev: any) => ({ ...prev, target_url: data.targetUrl, content_type: data.contentType }));
             setHasAccess(true);
             showToast('Content unlocked!', 'success');
         } catch (err) {
@@ -346,6 +344,7 @@ export default function UnlockPage() {
         </div>
     );
 
+
     if (!linkData) return (
         <div className="min-h-screen bg-background flex flex-col items-center justify-center p-4 text-center space-y-6">
             <div className="p-4 bg-secondary/30 rounded-full">
@@ -394,112 +393,130 @@ export default function UnlockPage() {
                     </div>
                 </div>
 
-                {!isConnected ? (
-                    <div className="flex justify-center">
-                        <ConnectButton />
-                    </div>
-                ) : hasAccess ? (
-                    <div className="bg-green-900/20 border border-green-900 rounded-2xl p-4 md:p-6 text-center space-y-4">
-                        <p className="text-green-400 font-medium text-sm md:text-base">Payment Verified!</p>
-                        <a
-                            href={linkData.target_url.startsWith('http') ? linkData.target_url : `https://${linkData.target_url}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center gap-2 bg-green-600 hover:bg-green-500 text-white px-4 py-2 md:px-6 md:py-3 rounded-xl font-semibold transition-colors text-sm md:text-base"
-                        >
-                            <Download className="w-4 h-4 md:w-5 md:h-5" />
-                            Access Content
-                        </a>
-                    </div>
-                ) : (
-                    <div className="bg-card border border-border rounded-2xl p-4 md:p-6 space-y-4 md:space-y-6 shadow-xl">
-                        {/* Payment Method Toggle */}
-                        <div className="grid grid-cols-2 gap-2 p-1 bg-muted rounded-lg">
-                            <button
-                                onClick={() => setPaymentMethod('USDC')}
-                                className={cn(
-                                    "flex items-center justify-center gap-2 py-1.5 md:py-2 rounded-md text-xs md:text-sm font-medium transition-all",
-                                    paymentMethod === 'USDC' ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"
-                                )}
-                            >
-                                <CreditCard className="w-3 h-3 md:w-4 md:h-4" />
-                                USDC
-                            </button>
-                            <button
-                                onClick={() => setPaymentMethod('ETH')}
-                                className={cn(
-                                    "flex items-center justify-center gap-2 py-1.5 md:py-2 rounded-md text-xs md:text-sm font-medium transition-all",
-                                    paymentMethod === 'ETH' ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"
-                                )}
-                            >
-                                <Coins className="w-3 h-3 md:w-4 md:h-4" />
-                                ETH
-                            </button>
-                        </div>
-
-                        <div className="flex justify-between items-center text-sm text-muted-foreground bg-secondary/20 p-3 md:p-4 rounded-xl border border-border/50">
-                            <span className="text-xs md:text-sm">Price</span>
-                            <span className="text-foreground font-bold text-xl md:text-2xl text-primary">
-                                {paymentMethod === 'USDC'
-                                    ? `${linkData.price} USDC`
-                                    : ethPrice
-                                        ? `~${(parseFloat(linkData.price) / ethPrice).toFixed(5)} ETH`
-                                        : 'Loading...'}
-                            </span>
-                        </div>
-
-                        {paymentMethod === 'USDC' && !hasBalance && (
-                            <div className="flex items-center gap-2 text-destructive text-xs md:text-sm bg-destructive/10 p-3 rounded-lg border border-destructive/20">
-                                <AlertCircle className="w-4 h-4" />
-                                <span>Insufficient USDC balance</span>
+                {hasAccess ? (
+                    <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                        {linkData.content_type === 'text' ? (
+                            <div className="relative group">
+                                <pre className="p-4 bg-secondary/50 rounded-xl border border-border overflow-x-auto text-sm font-mono whitespace-pre-wrap break-words max-h-64 md:max-h-96">
+                                    {linkData.target_url}
+                                </pre>
+                                <button
+                                    className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity bg-background/50 hover:bg-background p-2 rounded-md text-foreground"
+                                    onClick={() => {
+                                        navigator.clipboard.writeText(linkData.target_url);
+                                        showToast('Copied to clipboard', 'success');
+                                    }}
+                                >
+                                    <Copy className="w-4 h-4" />
+                                </button>
                             </div>
-                        )}
-
-                        {paymentMethod === 'USDC' && !hasAllowance ? (
-                            <Button
-                                onClick={handleApprove}
-                                disabled={isPending || isConfirming || !hasBalance}
-                                isLoading={isPending || isConfirming}
-                                className="w-full"
-                            >
-                                {isPending ? 'Confirm Approval...' :
-                                    isConfirming ? 'Approving USDC...' :
-                                        'Approve USDC'}
-                            </Button>
                         ) : (
                             <Button
-                                onClick={handlePay}
-                                disabled={isPending || isConfirming || checkingAccess}
-                                isLoading={isPending || isConfirming || checkingAccess}
-                                className="w-full"
+                                className="w-full gap-2 text-lg h-12 md:h-14 shadow-lg shadow-primary/20 hover:shadow-primary/40 transition-all"
+                                onClick={() => window.open(linkData.target_url, '_blank')}
                             >
-                                {isPending ? 'Confirm Payment...' :
-                                    isConfirming ? 'Processing Transaction...' :
-                                        checkingAccess ? 'Checking Access...' :
-                                            `Pay with ${paymentMethod}`}
+                                <ExternalLink className="w-5 h-5" />
+                                Access Content
                             </Button>
                         )}
+                        <p className="text-xs text-center text-muted-foreground">
+                            Thank you for your purchase!
+                        </p>
+                    </div>
+                ) : (
+                    !isConnected ? (
+                        <div className="flex justify-center">
+                            <ConnectButton />
+                        </div>
+                    ) : (
+                        <div className="space-y-4">
+                            <div className="grid grid-cols-2 gap-1 p-1 bg-secondary/50 rounded-lg">
+                                <button
+                                    onClick={() => setPaymentMethod('USDC')}
+                                    className={cn(
+                                        "flex items-center justify-center gap-2 py-1.5 md:py-2 rounded-md text-xs md:text-sm font-medium transition-all",
+                                        paymentMethod === 'USDC' ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"
+                                    )}
+                                >
+                                    <CreditCard className="w-3 h-3 md:w-4 md:h-4" />
+                                    USDC
+                                </button>
+                                <button
+                                    onClick={() => setPaymentMethod('ETH')}
+                                    className={cn(
+                                        "flex items-center justify-center gap-2 py-1.5 md:py-2 rounded-md text-xs md:text-sm font-medium transition-all",
+                                        paymentMethod === 'ETH' ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"
+                                    )}
+                                >
+                                    <Coins className="w-3 h-3 md:w-4 md:h-4" />
+                                    ETH
+                                </button>
+                            </div>
 
-                        {isSuccess && !hasAccess && (hasAllowance || paymentMethod === 'ETH') && (
-                            <div className="space-y-4">
-                                <div className="flex items-center gap-2 text-yellow-500 text-xs md:text-sm justify-center">
-                                    <Loader2 className="w-4 h-4 animate-spin" />
-                                    <span>Transaction confirmed, verifying access...</span>
+                            <div className="flex justify-between items-center text-sm text-muted-foreground bg-secondary/20 p-3 md:p-4 rounded-xl border border-border/50">
+                                <span className="text-xs md:text-sm">Price</span>
+                                <span className="text-foreground font-bold text-xl md:text-2xl text-primary">
+                                    {paymentMethod === 'USDC'
+                                        ? `${linkData.price} USDC`
+                                        : ethPrice
+                                            ? `~${(parseFloat(linkData.price) / ethPrice).toFixed(5)} ETH`
+                                            : 'Loading...'}
+                                </span>
+                            </div>
+
+                            {paymentMethod === 'USDC' && !hasBalance && (
+                                <div className="flex items-center gap-2 text-destructive text-xs md:text-sm bg-destructive/10 p-3 rounded-lg border border-destructive/20">
+                                    <AlertCircle className="w-4 h-4" />
+                                    <span>Insufficient USDC balance</span>
                                 </div>
+                            )}
+
+                            {paymentMethod === 'USDC' && !hasAllowance ? (
                                 <Button
-                                    variant="secondary"
-                                    onClick={checkAccess}
-                                    isLoading={checkingAccess}
-                                    disabled={checkingAccess}
+                                    onClick={handleApprove}
+                                    disabled={isPending || isConfirming || !hasBalance}
+                                    isLoading={isPending || isConfirming}
                                     className="w-full"
                                 >
-                                    Verify Access Manually
+                                    {isPending ? 'Confirm Approval...' :
+                                        isConfirming ? 'Approving USDC...' :
+                                            'Approve USDC'}
                                 </Button>
-                            </div>
-                        )}
-                    </div>
+                            ) : (
+                                <Button
+                                    onClick={handlePay}
+                                    disabled={isPending || isConfirming || checkingAccess}
+                                    isLoading={isPending || isConfirming || checkingAccess}
+                                    className="w-full"
+                                >
+                                    {isPending ? 'Confirm Payment...' :
+                                        isConfirming ? 'Processing Transaction...' :
+                                            checkingAccess ? 'Checking Access...' :
+                                                `Pay with ${paymentMethod}`}
+                                </Button>
+                            )}
+
+                            {isSuccess && !hasAccess && (hasAllowance || paymentMethod === 'ETH') && (
+                                <div className="space-y-4">
+                                    <div className="flex items-center gap-2 text-yellow-500 text-xs md:text-sm justify-center">
+                                        <Loader2 className="w-4 h-4 animate-spin" />
+                                        <span>Transaction confirmed, verifying access...</span>
+                                    </div>
+                                    <Button
+                                        variant="secondary"
+                                        onClick={checkAccess}
+                                        isLoading={checkingAccess}
+                                        disabled={checkingAccess}
+                                        className="w-full"
+                                    >
+                                        Verify Access Manually
+                                    </Button>
+                                </div>
+                            )}
+                        </div>
+                    )
                 )}
-            </div>
-        </main>
+            </div >
+        </main >
     );
 }

@@ -14,6 +14,7 @@ export default function Home() {
   const { address, isConnected } = useAccount();
   const { showToast } = useToast();
   const [targetUrl, setTargetUrl] = useState('');
+  const [contentType, setContentType] = useState<'url' | 'text'>('url');
   const [price, setPrice] = useState('');
   const [title, setTitle] = useState('');
   const [loading, setLoading] = useState(false);
@@ -36,12 +37,13 @@ export default function Home() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          slug,
-          target_url: targetUrl,
-          price: parseFloat(price),
+          slug: slug, // Assuming `slug` is the generated one, as `customSlug` is not defined.
+          title: title || undefined,
+          price: parseFloat(price), // Keep parseFloat as it was in the original
           receiver_address: address,
-          title: title
-        })
+          target_url: targetUrl,
+          content_type: contentType
+        }),
       });
 
       const data = await response.json();
@@ -223,16 +225,57 @@ export default function Home() {
               <p className="text-muted-foreground">Set a price for your secret content.</p>
             </div>
             <form id="create-link-form" onSubmit={handleCreate} className="bg-card border border-border rounded-2xl p-6 space-y-6 shadow-sm">
+              {/* Content Type Tabs */}
+              <div className="flex p-1 bg-secondary/20 rounded-xl mb-4">
+                <button
+                  type="button"
+                  onClick={() => setContentType('url')}
+                  className={`flex-1 py-2 text-sm font-medium rounded-lg transition-all ${contentType === 'url'
+                    ? 'bg-background text-foreground shadow-sm'
+                    : 'text-muted-foreground hover:text-foreground'
+                    }`}
+                >
+                  Link (URL)
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setContentType('text')}
+                  className={`flex-1 py-2 text-sm font-medium rounded-lg transition-all ${contentType === 'text'
+                    ? 'bg-background text-foreground shadow-sm'
+                    : 'text-muted-foreground hover:text-foreground'
+                    }`}
+                >
+                  Text / Code
+                </button>
+              </div>
+
               <div className="space-y-2">
-                <label className="text-sm font-medium text-foreground">Target URL</label>
-                <input
-                  type="url"
-                  placeholder="https://..."
-                  value={targetUrl}
-                  onChange={(e) => setTargetUrl(e.target.value)}
-                  className="w-full bg-input/10 border border-input rounded-xl px-4 py-3 focus:outline-none focus:border-primary transition-colors placeholder:text-muted-foreground text-foreground"
-                  required
-                />
+                <label className="text-sm font-medium text-muted-foreground">
+                  {contentType === 'url' ? 'Target URL' : 'Secret Content'}
+                </label>
+                {contentType === 'url' ? (
+                  <div className="relative">
+                    <LinkIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                    <input
+                      type="url"
+                      placeholder="https://..."
+                      value={targetUrl}
+                      onChange={(e) => setTargetUrl(e.target.value)}
+                      className="w-full pl-10 pr-4 py-3 bg-input/10 border border-input rounded-xl focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
+                      required
+                    />
+                  </div>
+                ) : (
+                  <div className="relative">
+                    <textarea
+                      placeholder="Enter secret text, code, or private keys..."
+                      value={targetUrl}
+                      onChange={(e) => setTargetUrl(e.target.value)}
+                      className="w-full p-4 bg-input/10 border border-input rounded-xl focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all min-h-[120px] font-mono text-sm"
+                      required
+                    />
+                  </div>
+                )}
                 <p className="text-xs text-muted-foreground">The secret content users pay to see.</p>
               </div>
 

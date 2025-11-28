@@ -3,7 +3,7 @@ import { supabaseAdmin } from '@/lib/supabase-admin';
 
 export async function POST(req: NextRequest) {
     try {
-        const { slug, title, price, receiver_address, target_url } = await req.json();
+        const { slug, title, price, receiver_address, target_url, content_type } = await req.json();
 
         if (!slug || !price || !receiver_address || !target_url) {
             return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
@@ -40,6 +40,7 @@ export async function POST(req: NextRequest) {
             .insert({
                 link_id: slug,
                 target_url: target_url,
+                content_type: content_type || 'url',
             });
 
         if (secretError) {
