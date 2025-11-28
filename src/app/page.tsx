@@ -292,7 +292,7 @@ export default function Home() {
                     : 'text-muted-foreground hover:text-foreground'
                     }`}
                 >
-                  Text / Code
+                  Secret Text
                 </button>
                 <button
                   type="button"
@@ -325,7 +325,7 @@ export default function Home() {
                 ) : contentType === 'text' ? (
                   <div className="relative">
                     <textarea
-                      placeholder="Enter secret text, code, or private keys..."
+                      placeholder="Enter secret text, passwords, or exclusive content..."
                       value={targetUrl}
                       onChange={(e) => setTargetUrl(e.target.value)}
                       className="w-full p-4 bg-input/10 border border-input rounded-xl focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all min-h-[120px] font-mono text-sm"
