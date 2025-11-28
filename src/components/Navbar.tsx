@@ -52,7 +52,7 @@ export function Navbar() {
             <div className="px-4 md:px-6 flex flex-col md:flex-row md:items-center md:justify-between min-h-[4rem]">
                 {/* Top Row: Logo + Actions (Mobile) / Logo + Links + Actions (Desktop) */}
                 {/* Top Row: Logo + Actions (Mobile) / Logo + Links + Actions (Desktop) */}
-                <div className="flex items-center w-full h-16 md:h-auto">
+                <div className="flex items-center w-full h-14 md:h-auto">
                     {/* Logo */}
                     <Link href="/" className="flex items-center gap-2 text-xl font-bold text-foreground hover:text-primary transition-colors shrink-0 mr-8">
                         <div className="p-1.5 bg-primary/10 rounded-lg">
@@ -100,13 +100,13 @@ export function Navbar() {
                 </div>
 
                 {/* Mobile Links (Second Row) */}
-                <div className="md:hidden flex items-center gap-1 overflow-x-auto no-scrollbar pb-3 -mx-4 px-4">
+                <div className="md:hidden flex items-center gap-0.5 overflow-x-auto no-scrollbar pb-2 -mx-4 px-4">
                     {tabs.map((tab) => (
                         <Link
                             key={tab.href}
                             href={tab.href}
                             className={twMerge(
-                                "px-3 py-1.5 rounded-lg text-sm font-medium transition-colors whitespace-nowrap",
+                                "px-2.5 py-1 rounded-lg text-xs font-medium transition-colors whitespace-nowrap",
                                 pathname === tab.href
                                     ? "bg-primary/10 text-primary"
                                     : "text-muted-foreground hover:text-foreground hover:bg-secondary"
