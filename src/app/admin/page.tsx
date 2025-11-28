@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useRouter } from 'next/navigation';
 import { useAccount, useReadContract, useWriteContract } from 'wagmi';
-import { Wallet, Users, MessageSquare, Settings, ShieldAlert, Loader2, DollarSign, Activity, Link as LinkIcon, Search } from 'lucide-react';
+import { Wallet, Users, MessageSquare, Settings, ShieldAlert, Loader2, DollarSign, Activity, Link as LinkIcon, Search, Server } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { formatDistanceToNow } from 'date-fns';
 import { LinksTab } from './LinksTab';
@@ -124,6 +124,12 @@ export default function AdminDashboard() {
                             icon={<LinkIcon className="w-4 h-4 md:w-5 md:h-5" />}
                             label="All Links"
                         />
+                        <TabButton
+                            active={activeTab === 'status'}
+                            onClick={() => setActiveTab('status')}
+                            icon={<Server className="w-4 h-4 md:w-5 md:h-5" />}
+                            label="System Status"
+                        />
 
                     </nav>
 
@@ -134,6 +140,7 @@ export default function AdminDashboard() {
                         {activeTab === 'fees' && <FeesTab />}
                         {activeTab === 'feedback' && <FeedbackTab supabase={supabase} />}
                         {activeTab === 'links' && <LinksTab supabase={supabase} />}
+                        {activeTab === 'status' && <SystemStatusTab supabase={supabase} />}
 
                     </main>
                 </div>
@@ -599,3 +606,99 @@ function FeedbackTab({ supabase }: any) {
 }
 
 
+
+function SystemStatusTab({ supabase }: any) {
+    const [statuses, setStatuses] = useState({
+        supabase: 'checking',
+        rpc: 'checking',
+        contract: 'checking'
+    });
+
+    const { data: contractOwner } = useReadContract({
+        address: CONTRACT_ADDRESS_V2,
+        abi: BASELOCK_V2_ABI,
+        functionName: 'owner',
+    });
+
+    useEffect(() => {
+        const checkStatus = async () => {
+            // 1. Check Supabase
+            try {
+                const { error } = await supabase.from('links').select('id').limit(1);
+                setStatuses(prev => ({ ...prev, supabase: error ? 'error' : 'operational' }));
+            } catch {
+                setStatuses(prev => ({ ...prev, supabase: 'error' }));
+            }
+
+            // 2. Check RPC (Base)
+            try {
+                // Simple fetch to a public RPC endpoint or use wagmi provider if available
+                // Here we'll try to fetch the block number using the public client logic (simulated via fetch for simplicity in this component, or use wagmi hook)
+                // Actually, let's use a simple fetch to a known reliable RPC for a health check
+                const rpcRes = await fetch('https://mainnet.base.org', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ jsonrpc: '2.0', method: 'eth_blockNumber', params: [], id: 1 })
+                });
+                if (rpcRes.ok) {
+                    setStatuses(prev => ({ ...prev, rpc: 'operational' }));
+                } else {
+                    setStatuses(prev => ({ ...prev, rpc: 'error' }));
+                }
+            } catch {
+                setStatuses(prev => ({ ...prev, rpc: 'error' }));
+            }
+        };
+
+        checkStatus();
+    }, [supabase]);
+
+    // 3. Check Contract (Reactive to hook)
+    useEffect(() => {
+        if (contractOwner) {
+            setStatuses(prev => ({ ...prev, contract: 'operational' }));
+        } else {
+            // If it takes too long or is undefined after some time, it might be an error, 
+            // but for now we rely on the hook's data presence.
+            // We can leave it as 'checking' or set to 'error' if we had an error object from the hook.
+        }
+    }, [contractOwner]);
+
+
+    const StatusRow = ({ label, status }: { label: string, status: string }) => (
+        <div className="flex items-center justify-between p-4 bg-secondary/10 rounded-xl border border-border">
+            <span className="font-medium text-foreground">{label}</span>
+            <div className="flex items-center gap-2">
+                {status === 'checking' && <Loader2 className="w-4 h-4 animate-spin text-muted-foreground" />}
+                {status === 'operational' && (
+                    <>
+                        <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                        <span className="text-green-500 text-sm font-bold">Operational</span>
+                    </>
+                )}
+                {status === 'error' && (
+                    <>
+                        <div className="w-2 h-2 rounded-full bg-red-500" />
+                        <span className="text-red-500 text-sm font-bold">Outage</span>
+                    </>
+                )}
+            </div>
+        </div>
+    );
+
+    return (
+        <div className="space-y-6">
+            <h2 className="text-2xl font-bold flex items-center gap-2">
+                <Activity className="w-6 h-6 text-primary" /> System Status
+            </h2>
+            <div className="space-y-4">
+                <StatusRow label="Database (Supabase)" status={statuses.supabase} />
+                <StatusRow label="Base Network (RPC)" status={statuses.rpc} />
+                <StatusRow label="Smart Contract (V3)" status={statuses.contract} />
+            </div>
+            <div className="p-4 bg-blue-500/10 border border-blue-500/20 rounded-xl text-sm text-blue-400">
+                <p>Status checks are performed in real-time from your browser.</p>
+            </div>
+        </div>
+    );
+}
