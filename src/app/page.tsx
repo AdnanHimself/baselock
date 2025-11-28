@@ -77,7 +77,7 @@ export default function Home() {
                 Make Any Link Pay.
               </h1>
               <p className="text-xl md:text-2xl text-muted-foreground leading-relaxed max-w-2xl mx-auto">
-                Stop DMing your wallet address. Lock content behind a payment gate and sell it instantly. No signups, no subscriptions, just direct revenue on Base.
+                Turn any URL into a digital product in seconds. Simply lock your content, set a price, and start selling.
               </p>
 
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
@@ -94,7 +94,7 @@ export default function Home() {
                   How it Works
                 </a>
               </div>
-              <p className="text-sm text-muted-foreground">Settles instantly in ETH or USDC.</p>
+              <p className="text-sm text-muted-foreground">Get paid instantly in ETH or USDC.</p>
             </div>
 
             {/* Value Proposition Bar */}
