@@ -33,6 +33,17 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: 'Invalid signature' }, { status: 401 });
         }
 
+        // 0.5 Replay Protection: Check if transaction hash was already used
+        const { data: existingTx, error: txCheckError } = await supabaseAdmin
+            .from('used_transactions')
+            .select('tx_hash')
+            .eq('tx_hash', txHash)
+            .single();
+
+        if (existingTx) {
+            return NextResponse.json({ error: 'Transaction already used' }, { status: 400 });
+        }
+
         // 1. Fetch Link Price and Receiver from Database
         const { data: link, error: linkError } = await supabaseAdmin
             .from('links')
@@ -65,8 +76,6 @@ export async function POST(req: NextRequest) {
 
         for (const log of transaction.logs) {
             // Check against V2 Contract Address (case insensitive)
-            // Note: If using placeholder, this check will fail unless we skip it for testing or user updates it.
-            // For now, we assume user updates it.
             if (log.address.toLowerCase() === CONTRACT_ADDRESS.toLowerCase()) {
                 try {
                     const decodedLog = decodeEventLog({
@@ -101,12 +110,6 @@ export async function POST(req: NextRequest) {
                                 console.error(`Insufficient USDC payment. Paid: ${args.amount}, Required: ${requiredAmount}`);
                                 continue;
                             }
-
-
-                            // ... existing imports ...
-
-                            // ... inside POST function ...
-
                         } else if (args.token === ZERO_ADDRESS) {
                             // ETH Payment (Native)
                             // Fetch live price
@@ -150,6 +153,17 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: 'Invalid payment: Verification failed' }, { status: 400 });
         }
 
+        // 3.5 Replay Protection: Record used transaction
+        const { error: recordTxError } = await supabaseAdmin
+            .from('used_transactions')
+            .insert({ tx_hash: txHash });
+
+        if (recordTxError) {
+            console.error('Error recording used transaction:', recordTxError);
+            // We log the error but proceed, as failing here would block a valid purchase.
+            // In a stricter system, we might want to fail or retry.
+        }
+
         // 4. Retrieve Secret Content
         const { data: secret, error: secretError } = await supabaseAdmin
             .from('secrets')
@@ -191,7 +205,6 @@ export async function POST(req: NextRequest) {
 
         if (purchaseError) {
             console.error('Error recording purchase:', purchaseError);
-            // Don't fail the request if just recording stats fails, but log it.
         }
 
         // Atomic increment using RPC
@@ -200,7 +213,7 @@ export async function POST(req: NextRequest) {
 
         if (rpcError) {
             console.error('Error incrementing sales count:', rpcError);
-            // Fallback to manual update if RPC fails (e.g. function not created yet)
+            // Fallback to manual update if RPC fails
             await supabaseAdmin
                 .from('links')
                 .update({
