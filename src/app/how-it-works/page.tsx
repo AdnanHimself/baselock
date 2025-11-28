@@ -59,6 +59,46 @@ export default function HowItWorksPage() {
                     </div>
                 </div>
 
+                {/* Is BaseLock Right For Me? */}
+                <div className="py-8 md:py-10 border-t border-border space-y-6">
+                    <div className="text-center space-y-2">
+                        <h2 className="text-2xl md:text-3xl font-bold">Is BaseLock right for me?</h2>
+                        <p className="text-muted-foreground">BaseLock is built for speed and friction-free commerce.</p>
+                    </div>
+
+                    <div className="grid md:grid-cols-2 gap-6">
+                        <div className="bg-green-500/10 border border-green-500/20 p-6 rounded-2xl space-y-4">
+                            <h3 className="font-bold text-green-600 dark:text-green-400 flex items-center gap-2">
+                                <span className="text-xl">✅</span> Perfect For
+                            </h3>
+                            <ul className="space-y-2 text-sm md:text-base text-foreground/80">
+                                <li className="flex items-start gap-2"><span>•</span> Quick templates & presets</li>
+                                <li className="flex items-start gap-2"><span>•</span> Exclusive alpha & leaks</li>
+                                <li className="flex items-start gap-2"><span>•</span> Community invites (Telegram/Discord)</li>
+                                <li className="flex items-start gap-2"><span>•</span> Consultation deposits</li>
+                                <li className="flex items-start gap-2"><span>•</span> Low-cost digital goods ($1 - $100)</li>
+                            </ul>
+                        </div>
+
+                        <div className="bg-red-500/10 border border-red-500/20 p-6 rounded-2xl space-y-4">
+                            <h3 className="font-bold text-red-600 dark:text-red-400 flex items-center gap-2">
+                                <span className="text-xl">❌</span> Not For
+                            </h3>
+                            <ul className="space-y-2 text-sm md:text-base text-foreground/80">
+                                <li className="flex items-start gap-2"><span>•</span> High-value enterprise software ($5000+)</li>
+                                <li className="flex items-start gap-2"><span>•</span> High-security IP needing DRM protection</li>
+                                <li className="flex items-start gap-2"><span>•</span> Physical goods shipping</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div className="text-center bg-secondary/30 p-4 rounded-xl">
+                        <p className="font-medium text-foreground">
+                            "Think of BaseLock as a digital vending machine. Quick, easy, and direct."
+                        </p>
+                    </div>
+                </div>
+
                 {/* FAQ Section */}
                 <div className="space-y-6 pt-8 md:pt-10 border-t border-border">
                     <h2 className="text-2xl md:text-3xl font-bold text-center">Frequently Asked Questions</h2>

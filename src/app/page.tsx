@@ -73,16 +73,22 @@ export default function Home() {
 
             {/* Hero Section */}
             <div className="space-y-6 max-w-3xl mx-auto">
-              <div className="inline-flex items-center justify-center p-4 bg-blue-600/10 dark:bg-blue-600/20 rounded-3xl mb-2">
-                <Lock className="w-10 h-10 md:w-12 md:h-12 text-blue-600 dark:text-blue-400" />
+              <div className="flex justify-center mb-6">
+                <img src="/hero_grafik.png" alt="BaseLock Hero" className="w-full max-w-[280px] md:max-w-[320px] mx-auto object-contain drop-shadow-2xl" />
               </div>
               <h1 className="text-4xl md:text-6xl font-bold tracking-tight bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 bg-clip-text text-transparent">
-                Monetize any link.
+                Make any Link Pay
               </h1>
               <p className="text-lg md:text-xl text-muted-foreground leading-relaxed max-w-2xl mx-auto">
-                Stop giving away your value. Lock any link, share it, and <span className="text-foreground font-medium">get paid instantly</span> in USDC or ETH.
-                <br className="hidden md:block" />
-                No subscriptions. No signups. Just revenue.
+                The friction-free way to sell digital content on Base. No signups, no subscriptions, direct crypto settlements.
+              </p>
+            </div>
+
+            {/* Why BaseLock? */}
+            <div className="py-8 space-y-4 max-w-2xl mx-auto">
+              <h2 className="text-2xl md:text-3xl font-bold">Stop DMing your wallet address.</h2>
+              <p className="text-muted-foreground text-lg">
+                Manual sales are slow. BaseLock is your automated digital cashier. Perfect for impulse buys and time-sensitive drops.
               </p>
             </div>
 
@@ -91,12 +97,12 @@ export default function Home() {
               <FeatureCard
                 icon={<Zap className="w-6 h-6 text-yellow-500 dark:text-yellow-400" />}
                 title="Instant Payouts"
-                description="Forget monthly wait times. Funds hit your wallet the second a sale is made."
+                description="Forget monthly wait times. Funds hit your wallet the second a sale is made. No middleman holding your money."
               />
               <FeatureCard
                 icon={<Shield className="w-6 h-6 text-green-500 dark:text-green-400" />}
-                title="Securely Gated"
-                description="Your content is hidden. Only verified buyers can unlock access."
+                title="Pay-to-Reveal"
+                description="Users pay crypto to reveal your content instantly. Simple, fast, and permissionless."
               />
               <FeatureCard
                 icon={<Globe className="w-6 h-6 text-blue-500 dark:text-blue-400" />}
@@ -110,24 +116,24 @@ export default function Home() {
               <h2 className="text-2xl font-bold text-center">What can you lock?</h2>
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 text-left">
                 <UseCaseCard
-                  icon="🎓"
-                  title="Sell Courses"
-                  description="Monetize your expertise. Lock tutorials, guides, and workshops."
+                  icon="🚀"
+                  title="Alpha & Leaks"
+                  description="Monetize time-sensitive info. First come, first served."
                 />
                 <UseCaseCard
-                  icon="🎨"
-                  title="Digital Assets"
-                  description="Sell presets, templates, art, or e-books directly to fans."
+                  icon="🤝"
+                  title="Consultation Deposits"
+                  description="Take a deposit before booking a call. Filter out time-wasters."
                 />
                 <UseCaseCard
                   icon="💬"
-                  title="Gate Communities"
-                  description="Create paid invite links for your Discord, Telegram, or Slack."
+                  title="Community Access"
+                  description="Paid invite links for Telegram, Discord, or private groups."
                 />
                 <UseCaseCard
-                  icon="🔑"
-                  title="Sell Access"
-                  description="Monetize API keys, software licenses, or exclusive passwords."
+                  icon="📂"
+                  title="Digital Downloads"
+                  description="Sell templates, presets, or files instantly."
                 />
               </div>
             </div>
