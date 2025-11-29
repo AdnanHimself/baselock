@@ -198,29 +198,33 @@ export default function Home() {
 
           {/* Creation Form (Always Visible) */}
           {createdLink ? (
-            <div className="max-w-md mx-auto bg-card border border-border rounded-2xl p-6 shadow-xl space-y-4 animate-in fade-in zoom-in duration-300">
-              <div className="text-center space-y-1">
-                <h3 className="text-xl font-semibold text-green-500">Link Created!</h3>
-                <p className="text-sm text-muted-foreground">Share this link to start earning.</p>
+            <div className="max-w-md mx-auto bg-card border border-border rounded-3xl p-8 shadow-2xl space-y-6 animate-in fade-in zoom-in duration-300">
+              <div className="text-center space-y-2">
+                <div className="w-16 h-16 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Check className="w-8 h-8 text-green-500" />
+                </div>
+                <h3 className="text-2xl font-bold text-foreground">Link Created!</h3>
+                <p className="text-muted-foreground">Your paywall is ready. Share it to start earning.</p>
               </div>
 
-              <div className="flex items-center gap-2 bg-secondary/50 p-3 rounded-xl border border-border">
-                <LinkIcon className="w-4 h-4 text-muted-foreground" />
+              <div className="flex items-center gap-2 bg-secondary/30 p-4 rounded-2xl border border-border group hover:border-primary/50 transition-colors">
+                <LinkIcon className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors" />
                 <input
                   readOnly
                   value={createdLink}
-                  className="bg-transparent flex-1 text-sm outline-none text-foreground"
+                  className="bg-transparent flex-1 text-base outline-none text-foreground font-medium"
                 />
                 <button
                   onClick={copyToClipboard}
-                  className="p-2 hover:bg-secondary rounded-lg transition-colors"
+                  className="p-2 hover:bg-background rounded-xl transition-all shadow-sm"
                 >
-                  {copied ? <Check className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4 text-muted-foreground" />}
+                  {copied ? <Check className="w-5 h-5 text-green-500" /> : <Copy className="w-5 h-5 text-foreground" />}
                 </button>
               </div>
 
               <Button
                 variant="secondary"
+                className="w-full h-12 text-base rounded-xl"
                 onClick={() => {
                   setCreatedLink(null);
                   setTargetUrl('');
@@ -228,79 +232,77 @@ export default function Home() {
                   setTitle('');
                 }}
               >
-                Create Another
+                Create Another Link
               </Button>
             </div>
           ) : (
-            <div className="max-w-md mx-auto space-y-6">
-              <div className="text-center space-y-2">
-                <h1 className="text-3xl font-bold tracking-tight">Create Lock</h1>
-                <p className="text-muted-foreground">Set a price for your secret content.</p>
-              </div>
-              <form id="create-link-form" onSubmit={handleCreate} className="bg-card border border-border rounded-2xl p-6 space-y-6 shadow-sm">
+            <div className="max-w-xl mx-auto space-y-8">
+
+              <form id="create-link-form" onSubmit={handleCreate} className="bg-card/50 backdrop-blur-sm border border-border/50 rounded-3xl p-6 md:p-8 space-y-8 shadow-xl">
+
                 {/* Content Type Tabs */}
-                <div className="flex p-1 bg-secondary/20 rounded-xl mb-4">
+                <div className="flex p-1.5 bg-secondary/50 rounded-2xl">
                   <button
                     type="button"
                     onClick={() => setContentType('url')}
-                    className={`flex-1 py-2 text-sm font-medium rounded-lg transition-all ${contentType === 'url'
-                      ? 'bg-background text-foreground shadow-sm'
-                      : 'text-muted-foreground hover:text-foreground'
+                    className={`flex-1 py-3 text-sm font-semibold rounded-xl transition-all ${contentType === 'url'
+                      ? 'bg-background text-foreground shadow-sm ring-1 ring-black/5 dark:ring-white/10'
+                      : 'text-muted-foreground hover:text-foreground hover:bg-background/50'
                       }`}
                   >
-                    Link (URL)
+                    Link
                   </button>
                   <button
                     type="button"
                     onClick={() => setContentType('text')}
-                    className={`flex-1 py-2 text-sm font-medium rounded-lg transition-all ${contentType === 'text'
-                      ? 'bg-background text-foreground shadow-sm'
-                      : 'text-muted-foreground hover:text-foreground'
+                    className={`flex-1 py-3 text-sm font-semibold rounded-xl transition-all ${contentType === 'text'
+                      ? 'bg-background text-foreground shadow-sm ring-1 ring-black/5 dark:ring-white/10'
+                      : 'text-muted-foreground hover:text-foreground hover:bg-background/50'
                       }`}
                   >
-                    Secret Text
+                    Text
                   </button>
                   <button
                     type="button"
                     onClick={() => setContentType('file')}
-                    className={`flex-1 py-2 text-sm font-medium rounded-lg transition-all ${contentType === 'file'
-                      ? 'bg-background text-foreground shadow-sm'
-                      : 'text-muted-foreground hover:text-foreground'
+                    className={`flex-1 py-3 text-sm font-semibold rounded-xl transition-all ${contentType === 'file'
+                      ? 'bg-background text-foreground shadow-sm ring-1 ring-black/5 dark:ring-white/10'
+                      : 'text-muted-foreground hover:text-foreground hover:bg-background/50'
                       }`}
                   >
-                    File / Image
+                    File
                   </button>
                 </div>
 
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-muted-foreground">
-                    {contentType === 'url' ? 'Target URL' : contentType === 'text' ? 'Secret Content' : 'Upload File'}
+                <div className="space-y-3">
+                  <label className="text-sm font-semibold text-foreground ml-1">
+                    {contentType === 'url' ? 'Paste your URL' : contentType === 'text' ? 'Enter Secret Content' : 'Upload File'}
                   </label>
                   {contentType === 'url' ? (
-                    <div className="relative">
-                      <LinkIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                    <div className="relative group">
+                      <LinkIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
                       <input
                         type="url"
                         placeholder="https://..."
                         value={targetUrl}
                         onChange={(e) => setTargetUrl(e.target.value)}
-                        className="w-full pl-10 pr-4 py-3 bg-input/10 border border-input rounded-xl focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
+                        className="w-full pl-12 pr-4 py-4 bg-background border-2 border-border/50 rounded-2xl focus:outline-none focus:border-primary/50 focus:ring-4 focus:ring-primary/10 transition-all text-lg"
                         required
                       />
                     </div>
                   ) : contentType === 'text' ? (
-                    <div className="relative">
+                    <div className="relative group">
                       <textarea
                         placeholder="Enter secret text, passwords, or exclusive content..."
                         value={targetUrl}
                         onChange={(e) => setTargetUrl(e.target.value)}
-                        className="w-full p-4 bg-input/10 border border-input rounded-xl focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all min-h-[120px] font-mono text-sm"
+                        className="w-full p-4 bg-background border-2 border-border/50 rounded-2xl focus:outline-none focus:border-primary/50 focus:ring-4 focus:ring-primary/10 transition-all min-h-[140px] font-mono text-base resize-none"
                         required
                       />
                     </div>
                   ) : (
-                    <div className="relative">
-                      <div className="border-2 border-dashed border-input rounded-xl p-8 text-center hover:bg-secondary/50 transition-colors cursor-pointer relative">
+                    <div className="relative group">
+                      <div className="border-2 border-dashed border-border hover:border-primary/50 rounded-2xl p-10 text-center hover:bg-secondary/30 transition-all cursor-pointer relative group-hover:scale-[1.01] duration-200">
                         <input
                           type="file"
                           accept="image/*,application/pdf"
@@ -318,68 +320,103 @@ export default function Home() {
                               setFile(null);
                             }
                           }}
-                          className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                          className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
                           required
                         />
-                        <div className="flex flex-col items-center gap-2 text-muted-foreground">
-                          <Upload className="w-8 h-8" />
-                          <span className="text-sm font-medium">
-                            {file ? file.name : "Click to upload or drag and drop"}
-                          </span>
-                          <span className="text-xs">Max 50MB (Images, PDF)</span>
+                        <div className="flex flex-col items-center gap-3 text-muted-foreground">
+                          <div className="w-12 h-12 rounded-full bg-secondary flex items-center justify-center group-hover:bg-primary/10 group-hover:text-primary transition-colors">
+                            <Upload className="w-6 h-6" />
+                          </div>
+                          <div className="space-y-1">
+                            <span className="text-base font-medium text-foreground block">
+                              {file ? file.name : "Click to upload file"}
+                            </span>
+                            <span className="text-xs text-muted-foreground">Max 50MB (Images, PDF)</span>
+                          </div>
                         </div>
                       </div>
                     </div>
                   )}
-                  <p className="text-xs text-muted-foreground">The secret content users pay to see.</p>
                 </div>
 
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-foreground">Link Title</label>
+                <div className="space-y-3">
+                  <label className="text-sm font-semibold text-foreground ml-1">Title (Optional)</label>
                   <input
                     type="text"
-                    placeholder="e.g. Exclusive Report"
+                    placeholder="e.g. My Exclusive Guide"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
-                    className="w-full bg-input/10 border border-input rounded-xl px-4 py-3 focus:outline-none focus:border-primary transition-colors placeholder:text-muted-foreground text-foreground"
-                    required
+                    className="w-full bg-background border-2 border-border/50 rounded-2xl px-4 py-3.5 focus:outline-none focus:border-primary/50 focus:ring-4 focus:ring-primary/10 transition-all text-base"
                   />
                 </div>
 
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-foreground">Price (USDC)</label>
-                  <div className="flex gap-4 items-start">
-                    <div className="relative flex-1">
-                      <input
-                        type="number"
-                        step="0.01"
-                        min="1"
-                        max="10000"
-                        placeholder="0.00"
-                        value={price}
-                        onChange={(e) => setPrice(e.target.value)}
-                        className="w-full bg-input/10 border border-input rounded-xl px-4 py-3 pl-12 focus:outline-none focus:border-primary transition-colors placeholder:text-muted-foreground text-foreground"
-                        required
-                      />
-                      <span className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground">$</span>
-                    </div>
-                    <div className="hidden md:block p-3 bg-blue-500/10 border border-blue-500/20 rounded-xl text-xs text-blue-600 dark:text-blue-400 max-w-[200px]">
-                      <p><strong>Note:</strong> You set the price in USDC, but buyers can pay with <strong>ETH</strong> (auto-converted).</p>
+                <div className="space-y-4">
+                  <label className="text-sm font-semibold text-foreground ml-1">Set Price (USDC)</label>
+
+                  {/* Price Presets */}
+                  <div className="grid grid-cols-4 gap-2">
+                    {[0.99, 4.99, 9.99].map((p) => (
+                      <button
+                        key={p}
+                        type="button"
+                        onClick={() => setPrice(p.toString())}
+                        className={`py-2 px-2 rounded-xl text-sm font-medium transition-all border-2 ${price === p.toString()
+                            ? 'border-primary bg-primary/5 text-primary'
+                            : 'border-transparent bg-secondary/50 text-muted-foreground hover:bg-secondary hover:text-foreground'
+                          }`}
+                      >
+                        ${p}
+                      </button>
+                    ))}
+                    <div className="flex items-center justify-center text-xs font-medium text-muted-foreground bg-transparent">
+                      Custom
                     </div>
                   </div>
-                  <p className="text-xs text-muted-foreground md:hidden mt-1">
-                    Buyers can also pay with ETH (auto-converted).
-                  </p>
-                  <p className="text-xs text-muted-foreground mt-1">Min 1 USDC. Max 10,000 USDC. {feePercentage}% platform fee applies.</p>
+
+                  <div className="relative group">
+                    <input
+                      type="number"
+                      step="0.01"
+                      min="1"
+                      max="10000"
+                      placeholder="0.00"
+                      value={price}
+                      onChange={(e) => setPrice(e.target.value)}
+                      className="w-full bg-background border-2 border-border/50 rounded-2xl px-4 py-4 pl-12 focus:outline-none focus:border-primary/50 focus:ring-4 focus:ring-primary/10 transition-all text-xl font-semibold"
+                      required
+                    />
+                    <span className="absolute left-5 top-1/2 -translate-y-1/2 text-muted-foreground font-semibold">$</span>
+                  </div>
                 </div>
 
                 <Button
                   type="submit"
                   isLoading={loading}
                   disabled={loading}
+                  className="w-full h-14 text-lg font-bold rounded-2xl shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all"
                 >
-                  {isConnected ? 'Create Locked Link' : 'Connect Wallet & Create'}
+                  {isConnected ? 'Create Paywall' : 'Create Paywall'}
                 </Button>
+
+                {/* Trust Signals */}
+                <div className="pt-2 flex flex-col items-center gap-4">
+                  <p className="text-sm text-muted-foreground">No signup required</p>
+                  <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-xs font-medium text-muted-foreground/80">
+                    <div className="flex items-center gap-1.5">
+                      <Check className="w-3.5 h-3.5 text-green-500" />
+                      <span>Instant payout</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <Check className="w-3.5 h-3.5 text-green-500" />
+                      <span>Accept any crypto</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <Check className="w-3.5 h-3.5 text-green-500" />
+                      <span>1% Fee</span>
+                    </div>
+                  </div>
+                </div>
+
               </form>
             </div>
           )}
