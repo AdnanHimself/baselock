@@ -337,26 +337,6 @@ export default function Home() {
                 <div className="space-y-4">
                   <label className="text-sm font-semibold text-foreground ml-1 mb-2 block">Set Price (USDC)</label>
 
-                  {/* Price Presets */}
-                  <div className="grid grid-cols-4 gap-2">
-                    {[0.99, 4.99, 9.99].map((p) => (
-                      <button
-                        key={p}
-                        type="button"
-                        onClick={() => setPrice(p.toString())}
-                        className={`py-2 px-2 rounded-xl text-sm font-medium transition-all border-2 ${price === p.toString()
-                          ? 'border-primary bg-primary/5 text-primary'
-                          : 'border-transparent bg-secondary/50 text-muted-foreground hover:bg-secondary hover:text-foreground'
-                          }`}
-                      >
-                        ${p}
-                      </button>
-                    ))}
-                    <div className="flex items-center justify-center text-xs font-medium text-muted-foreground bg-transparent">
-                      Custom
-                    </div>
-                  </div>
-
                   <div className="relative group">
                     <input
                       type="number"
