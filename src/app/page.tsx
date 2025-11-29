@@ -162,38 +162,22 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-[calc(100vh-7rem)] flex flex-col items-center justify-start pt-12 md:pt-24 p-4 bg-background text-foreground transition-colors">
+    <main className="min-h-[calc(100vh-7rem)] flex flex-col items-center justify-start pt-8 md:pt-16 p-4 bg-background text-foreground transition-colors">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <div className="w-full max-w-5xl space-y-12 py-8">
-        <div className="text-center space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-500 px-4">
+      <div className="w-full max-w-5xl space-y-8 py-4">
+        <div className="text-center space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500 px-4">
 
           {/* Hero Section */}
-          <div className="space-y-8 max-w-4xl mx-auto text-center pt-8 md:pt-12">
-            <h1 className="text-4xl md:text-7xl font-bold tracking-tight bg-gradient-to-r from-primary to-blue-600 dark:from-primary dark:to-blue-400 bg-clip-text text-transparent pb-2">
+          <div className="space-y-4 max-w-4xl mx-auto text-center pt-4 md:pt-8">
+            <h1 className="text-3xl md:text-6xl font-bold tracking-tight bg-gradient-to-r from-primary to-blue-600 dark:from-primary dark:to-blue-400 bg-clip-text text-transparent pb-1">
               Make Any Link Pay.
             </h1>
-            <p className="text-lg md:text-2xl text-foreground/80 leading-relaxed max-w-2xl mx-auto">
-              Turn any URL into a digital product in seconds. Simply lock your content, set a price, and start selling.
+            <p className="text-lg md:text-xl text-foreground/80 leading-relaxed max-w-2xl mx-auto">
+              Turn any URL or file into a secure crypto paywall.
             </p>
-
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
-              <Button
-                className="w-full sm:w-auto px-8 py-4 text-lg h-auto"
-                onClick={() => document.getElementById('create-link-form')?.scrollIntoView({ behavior: 'smooth' })}
-              >
-                Start Monetizing
-              </Button>
-              <Link
-                href="/how-it-works"
-                className="w-full sm:w-auto px-8 py-4 text-lg font-semibold rounded-xl border border-border hover:bg-secondary/50 transition-colors text-center"
-              >
-                How it Works
-              </Link>
-            </div>
-            <p className="text-sm text-muted-foreground">Get paid instantly in ETH or USDC.</p>
           </div>
 
           {/* Creation Form (Always Visible) */}
@@ -275,7 +259,7 @@ export default function Home() {
                 </div>
 
                 <div className="space-y-3">
-                  <label className="text-sm font-semibold text-foreground ml-1">
+                  <label className="text-sm font-semibold text-foreground ml-1 mb-2 block">
                     {contentType === 'url' ? 'Paste your URL' : contentType === 'text' ? 'Enter Secret Content' : 'Upload File'}
                   </label>
                   {contentType === 'url' ? (
@@ -340,7 +324,7 @@ export default function Home() {
                 </div>
 
                 <div className="space-y-3">
-                  <label className="text-sm font-semibold text-foreground ml-1">Title (Optional)</label>
+                  <label className="text-sm font-semibold text-foreground ml-1 mb-2 block">Title (Optional)</label>
                   <input
                     type="text"
                     placeholder="e.g. My Exclusive Guide"
@@ -351,7 +335,7 @@ export default function Home() {
                 </div>
 
                 <div className="space-y-4">
-                  <label className="text-sm font-semibold text-foreground ml-1">Set Price (USDC)</label>
+                  <label className="text-sm font-semibold text-foreground ml-1 mb-2 block">Set Price (USDC)</label>
 
                   {/* Price Presets */}
                   <div className="grid grid-cols-4 gap-2">
@@ -361,8 +345,8 @@ export default function Home() {
                         type="button"
                         onClick={() => setPrice(p.toString())}
                         className={`py-2 px-2 rounded-xl text-sm font-medium transition-all border-2 ${price === p.toString()
-                            ? 'border-primary bg-primary/5 text-primary'
-                            : 'border-transparent bg-secondary/50 text-muted-foreground hover:bg-secondary hover:text-foreground'
+                          ? 'border-primary bg-primary/5 text-primary'
+                          : 'border-transparent bg-secondary/50 text-muted-foreground hover:bg-secondary hover:text-foreground'
                           }`}
                       >
                         ${p}
