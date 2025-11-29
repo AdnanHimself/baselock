@@ -8,8 +8,49 @@ import { ThemeProvider } from "@/components/ThemeProvider";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "BaseLock",
-  description: "Pay-to-Reveal Links on Base. Monetize any URL instantly.",
+  metadataBase: new URL('https://baselock.vercel.app'),
+  title: {
+    default: "BaseLock | Monetize Any Link with Crypto",
+    template: "%s | BaseLock"
+  },
+  description: "Turn any URL, file, or text into a digital product. The fastest way to sell content for USDC or ETH on Base. No accounts needed, instant payouts.",
+  keywords: ["Base", "Crypto Payment Link", "Sell Files with Crypto", "USDC Paywall", "Token Gate", "Monetize Links", "Ethereum", "L2"],
+  authors: [{ name: "BaseLock Team" }],
+  creator: "BaseLock",
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: "https://baselock.vercel.app",
+    title: "BaseLock | Monetize Any Link with Crypto",
+    description: "Turn any URL, file, or text into a digital product. Instant payouts in USDC/ETH on Base.",
+    siteName: "BaseLock",
+    images: [
+      {
+        url: "/og-image.png", // We should ensure this exists or use a placeholder
+        width: 1200,
+        height: 630,
+        alt: "BaseLock - Pay-to-Reveal Links",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "BaseLock | Monetize Any Link with Crypto",
+    description: "Turn any URL, file, or text into a digital product. Instant payouts in USDC/ETH on Base.",
+    creator: "@baselock", // Placeholder
+    images: ["/og-image.png"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
 };
 
 import { Navbar } from "@/components/Navbar";

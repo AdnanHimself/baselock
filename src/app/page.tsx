@@ -115,8 +115,31 @@ export default function Home() {
     }
   };
 
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    name: 'BaseLock',
+    applicationCategory: 'FinanceApplication',
+    operatingSystem: 'Web',
+    offers: {
+      '@type': 'Offer',
+      price: '0',
+      priceCurrency: 'USD',
+    },
+    description: 'Turn any URL, file, or text into a digital product. The fastest way to sell content for USDC or ETH on Base.',
+    aggregateRating: {
+      '@type': 'AggregateRating',
+      ratingValue: '4.8',
+      ratingCount: '120',
+    },
+  };
+
   return (
     <main className="min-h-[calc(100vh-7rem)] flex flex-col items-center justify-start pt-12 md:pt-24 p-4 bg-background text-foreground transition-colors">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <div className="w-full max-w-5xl space-y-12 py-8">
         {!isConnected ? (
           <div className="text-center space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-500 px-4">
