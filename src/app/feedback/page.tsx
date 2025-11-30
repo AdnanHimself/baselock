@@ -65,7 +65,7 @@ export default function FeedbackPage() {
                     <p className="text-sm md:text-base text-muted-foreground">Found a bug? Have a feature request? Let us know!</p>
                 </div>
 
-                <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6 bg-card border border-border p-4 md:p-6 rounded-2xl shadow-sm">
+                <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6 bg-card border border-border p-4 md:p-6 rounded-2xl">
                     <div className="space-y-2">
                         <label className="text-sm font-medium">Category</label>
                         <select

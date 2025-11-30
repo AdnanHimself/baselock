@@ -11,7 +11,7 @@ export default function HowItWorksPage() {
 
                 <div className="grid gap-4 md:gap-6">
                     {/* Step 1 */}
-                    <div className="flex flex-col md:flex-row gap-4 md:gap-6 p-5 md:p-6 rounded-2xl bg-card border border-border hover:border-primary/50 transition-all group shadow-sm hover-glow">
+                    <div className="flex flex-col md:flex-row gap-4 md:gap-6 p-5 md:p-6 rounded-2xl bg-card border border-border hover:border-primary/50 transition-all group hover-glow">
                         <div className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-xl md:text-2xl shrink-0 group-hover:scale-110 transition-transform">1</div>
                         <div className="space-y-2 md:space-y-3">
                             <h3 className="text-xl md:text-2xl font-semibold text-foreground group-hover:text-primary transition-colors">Lock It</h3>
@@ -22,7 +22,7 @@ export default function HowItWorksPage() {
                     </div>
 
                     {/* Step 2 */}
-                    <div className="flex flex-col md:flex-row gap-4 md:gap-6 p-5 md:p-6 rounded-2xl bg-card border border-border hover:border-primary/50 transition-all group shadow-sm hover-glow">
+                    <div className="flex flex-col md:flex-row gap-4 md:gap-6 p-5 md:p-6 rounded-2xl bg-card border border-border hover:border-primary/50 transition-all group hover-glow">
                         <div className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-xl md:text-2xl shrink-0 group-hover:scale-110 transition-transform">2</div>
                         <div className="space-y-2 md:space-y-3">
                             <h3 className="text-xl md:text-2xl font-semibold text-foreground group-hover:text-primary transition-colors">Share It</h3>
@@ -33,7 +33,7 @@ export default function HowItWorksPage() {
                     </div>
 
                     {/* Step 3 */}
-                    <div className="flex flex-col md:flex-row gap-4 md:gap-6 p-5 md:p-6 rounded-2xl bg-card border border-border hover:border-primary/50 transition-all group shadow-sm hover-glow">
+                    <div className="flex flex-col md:flex-row gap-4 md:gap-6 p-5 md:p-6 rounded-2xl bg-card border border-border hover:border-primary/50 transition-all group hover-glow">
                         <div className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-xl md:text-2xl shrink-0 group-hover:scale-110 transition-transform">3</div>
                         <div className="space-y-2 md:space-y-3">
                             <h3 className="text-xl md:text-2xl font-semibold text-foreground group-hover:text-primary transition-colors">Profit</h3>

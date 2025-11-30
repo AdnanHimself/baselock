@@ -230,7 +230,7 @@ export default function Home() {
                 />
                 <button
                   onClick={copyToClipboard}
-                  className="p-2 hover:bg-background rounded-xl transition-all shadow-sm"
+                  className="p-2 hover:bg-background rounded-xl transition-all"
                 >
                   {copied ? <Check className="w-5 h-5 text-green-500" /> : <Copy className="w-5 h-5 text-foreground" />}
                 </button>
@@ -260,7 +260,7 @@ export default function Home() {
                     type="button"
                     onClick={() => setContentType('url')}
                     className={`flex-1 py-3 text-sm font-semibold rounded-xl transition-all ${contentType === 'url'
-                      ? 'bg-background text-foreground shadow-sm ring-1 ring-black/5 dark:ring-white/10'
+                      ? 'bg-background text-foreground ring-1 ring-black/5 dark:ring-white/10'
                       : 'text-muted-foreground hover:text-foreground hover:bg-background/50'
                       }`}
                   >
@@ -270,7 +270,7 @@ export default function Home() {
                     type="button"
                     onClick={() => setContentType('text')}
                     className={`flex-1 py-3 text-sm font-semibold rounded-xl transition-all ${contentType === 'text'
-                      ? 'bg-background text-foreground shadow-sm ring-1 ring-black/5 dark:ring-white/10'
+                      ? 'bg-background text-foreground ring-1 ring-black/5 dark:ring-white/10'
                       : 'text-muted-foreground hover:text-foreground hover:bg-background/50'
                       }`}
                   >
@@ -280,7 +280,7 @@ export default function Home() {
                     type="button"
                     onClick={() => setContentType('file')}
                     className={`flex-1 py-3 text-sm font-semibold rounded-xl transition-all ${contentType === 'file'
-                      ? 'bg-background text-foreground shadow-sm ring-1 ring-black/5 dark:ring-white/10'
+                      ? 'bg-background text-foreground ring-1 ring-black/5 dark:ring-white/10'
                       : 'text-muted-foreground hover:text-foreground hover:bg-background/50'
                       }`}
                   >

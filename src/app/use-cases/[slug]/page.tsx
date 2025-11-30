@@ -94,7 +94,7 @@ export default async function UseCasePage({ params }: Props) {
                                 ))}
                             </div>
                         </div>
-                        <div className="bg-card border border-border rounded-2xl p-8 shadow-xl">
+                        <div className="bg-card border border-border rounded-2xl p-8">
                             <div className="space-y-4">
                                 <div className="flex items-center justify-between border-b border-border pb-4">
                                     <div className="flex items-center gap-3">

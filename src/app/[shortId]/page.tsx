@@ -355,7 +355,7 @@ export default function UnlockPage() {
         <main className="min-h-screen bg-background text-foreground flex flex-col items-center justify-center p-3 md:p-4">
             <div className="w-full max-w-sm md:max-w-md space-y-6 md:space-y-8">
                 <div className="text-center space-y-3 md:space-y-4">
-                    <div className="inline-flex items-center justify-center p-3 md:p-4 bg-card rounded-full border border-border shadow-sm">
+                    <div className="inline-flex items-center justify-center p-3 md:p-4 bg-card rounded-full border border-border">
                         {hasAccess ? <Unlock className="w-6 h-6 md:w-8 md:h-8 text-green-500" /> : <Lock className="w-6 h-6 md:w-8 md:h-8 text-destructive" />}
                     </div>
                     <h1 className="text-2xl md:text-3xl font-bold">{linkData.title}</h1>
@@ -454,7 +454,7 @@ export default function UnlockPage() {
                             </div>
                         ) : linkData.content_type === 'file' ? (
                             <Button
-                                className="w-full gap-2 text-lg h-12 md:h-14 shadow-lg shadow-primary/20 hover:shadow-primary/40 transition-all"
+                                className="w-full gap-2 text-lg h-12 md:h-14 shadow-[0_0_20px_rgba(22,82,240,0.3)] hover:shadow-[0_0_30px_rgba(22,82,240,0.5)] transition-all"
                                 onClick={() => window.open(linkData.target_url, '_blank')}
                             >
                                 <Download className="w-5 h-5" />
@@ -462,7 +462,7 @@ export default function UnlockPage() {
                             </Button>
                         ) : (
                             <Button
-                                className="w-full gap-2 text-lg h-12 md:h-14 shadow-lg shadow-primary/20 hover:shadow-primary/40 transition-all"
+                                className="w-full gap-2 text-lg h-12 md:h-14 shadow-[0_0_20px_rgba(22,82,240,0.3)] hover:shadow-[0_0_30px_rgba(22,82,240,0.5)] transition-all"
                                 onClick={() => window.open(linkData.target_url, '_blank')}
                             >
                                 <ExternalLink className="w-5 h-5" />
@@ -485,7 +485,7 @@ export default function UnlockPage() {
                                     onClick={() => setPaymentMethod('USDC')}
                                     className={cn(
                                         "flex items-center justify-center gap-2 py-1.5 md:py-2 rounded-md text-xs md:text-sm font-medium transition-all",
-                                        paymentMethod === 'USDC' ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"
+                                        paymentMethod === 'USDC' ? "bg-background text-foreground" : "text-muted-foreground hover:text-foreground"
                                     )}
                                 >
                                     <CreditCard className="w-3 h-3 md:w-4 md:h-4" />
@@ -495,7 +495,7 @@ export default function UnlockPage() {
                                     onClick={() => setPaymentMethod('ETH')}
                                     className={cn(
                                         "flex items-center justify-center gap-2 py-1.5 md:py-2 rounded-md text-xs md:text-sm font-medium transition-all",
-                                        paymentMethod === 'ETH' ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"
+                                        paymentMethod === 'ETH' ? "bg-background text-foreground" : "text-muted-foreground hover:text-foreground"
                                     )}
                                 >
                                     <Coins className="w-3 h-3 md:w-4 md:h-4" />
