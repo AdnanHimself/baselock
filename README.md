@@ -1,7 +1,7 @@
 # 🔓 JustUnlock
 
 ### The disposable paywall for digital content on Base.
-**Just lock it. Just share it. Just get paid. No sign-ups, no databases, 100% on-chain.**
+**Just lock it. Just share it. Just get paid. No sign-ups, no user accounts, on-chain payments.**
 
 [![Website](https://img.shields.io/badge/Website-justunlock.link-blue?style=for-the-badge&logo=vercel)](https://justunlock.link)
 [![Built on Base](https://img.shields.io/badge/Built_on-BASE-0052FF?style=for-the-badge&logo=ethereum)](https://base.org)
@@ -21,7 +21,7 @@ JustUnlock is the simplest way to monetize digital content instantly. It allows 
 * **Instant Setup:** Create a payment link in seconds.
 * **Disposable:** Perfect for one-off transactions or quick sales.
 * **Direct Payouts:** Funds go straight to your wallet. No middlemen holding your money.
-* **Privacy First:** No accounts, no emails, no tracking. Just connect your wallet.
+* **Privacy First:** No user accounts, no emails, no tracking. Just connect your wallet.
 * **Low Fees:** Built on Base for minimal gas costs.
 
 ## 🛠️ How It Works
