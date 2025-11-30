@@ -11,7 +11,8 @@ import { UseCaseCard } from "@/components/UseCaseCard";
 
 import Link from 'next/link';
 
-// V3 Contract Address
+// V3 Contract Address (Base Mainnet)
+// This contract handles the fee collection and payment routing
 const CONTRACT_ADDRESS = '0xD2F2964Ac4665B539e7De9Dc3B14b1A8173c02E0';
 
 const FEE_ABI = [{
@@ -30,11 +31,14 @@ export default function Home() {
   const { showToast } = useToast();
   const { openConnectModal } = useConnectModal();
 
+  // State for form inputs
   const [targetUrl, setTargetUrl] = useState('');
   const [contentType, setContentType] = useState<'url' | 'text' | 'file'>('url');
   const [file, setFile] = useState<File | null>(null);
   const [price, setPrice] = useState('');
   const [title, setTitle] = useState('');
+
+  // UI State
   const [loading, setLoading] = useState(false);
   const [createdLink, setCreatedLink] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
@@ -49,11 +53,13 @@ export default function Home() {
 
   const feePercentage = feeBasisPoints ? Number(feeBasisPoints) / 100 : 1;
 
+  // Helper to generate a random 6-character slug for the link
   const generateSlug = () => {
     return Math.random().toString(36).substring(2, 8);
   };
 
-  // Auto-submit after connection if pending
+  // Effect to auto-submit the form after the user connects their wallet
+  // This improves UX by not requiring the user to click "Create" again
   useEffect(() => {
     if (isConnected && pendingSubmission && address) {
       submitForm();
@@ -64,6 +70,7 @@ export default function Home() {
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    // If wallet is not connected, prompt connection and set pending state
     if (!isConnected) {
       setPendingSubmission(true);
       if (openConnectModal) {
@@ -85,6 +92,7 @@ export default function Home() {
 
     try {
       // 1. Sign Message for Security (DoS Protection)
+      // We require a signature to prove ownership of the wallet creating the link
       const message = `Create Lock: ${slug} `;
       const signature = await signMessageAsync({ message });
 
@@ -94,6 +102,8 @@ export default function Home() {
         'x-address': address,
       };
 
+      // 2. Prepare Request Body
+      // Use FormData for file uploads, JSON for text/url
       if (contentType === 'file' && file) {
         const formData = new FormData();
         formData.append('slug', slug);
@@ -115,6 +125,7 @@ export default function Home() {
         });
       }
 
+      // 3. Call API to create link and store secret
       const response = await fetch('/api/create', {
         method: 'POST',
         headers: headers,
@@ -125,6 +136,7 @@ export default function Home() {
 
       if (!response.ok) throw new Error(data.error || 'Failed to create link');
 
+      // 4. Success: Show the created link
       setCreatedLink(`${window.location.origin}/${slug}`);
       showToast('Link created successfully!', 'success');
     } catch (err) {

@@ -10,6 +10,8 @@ export async function POST(req: NextRequest) {
 
         const contentTypeHeader = req.headers.get('content-type') || '';
 
+        // Parse request body based on Content-Type
+        // Multipart/form-data is used for file uploads, JSON for text/url
         if (contentTypeHeader.includes('multipart/form-data')) {
             const formData = await req.formData();
             slug = formData.get('slug') as string;
@@ -49,6 +51,7 @@ export async function POST(req: NextRequest) {
         }
 
         // 0. Security: Verify Wallet Signature (DoS Protection)
+        // We ensure that the request comes from the owner of the wallet address
         const signature = req.headers.get('x-signature');
         const address = req.headers.get('x-address');
 
@@ -85,6 +88,7 @@ export async function POST(req: NextRequest) {
             const buffer = Buffer.from(arrayBuffer);
 
             // 2. Validate File Type (Magic Numbers)
+            // We check the actual file header bytes to prevent spoofing
             const { fileTypeFromBuffer } = await import('file-type');
             const type = await fileTypeFromBuffer(buffer);
 
@@ -96,6 +100,7 @@ export async function POST(req: NextRequest) {
             }
 
             // Path: [slug]/[uuid]-[filename]
+            // We use a random UUID to prevent filename collisions
             const fileName = `${slug}/${crypto.randomUUID()}-${file.name.replace(/[^a-zA-Z0-9.-]/g, '_')}`;
 
             const { error: uploadError } = await supabaseAdmin.storage
@@ -114,7 +119,8 @@ export async function POST(req: NextRequest) {
             target_url = fileName;
         }
 
-        // 1. Insert public metadata into 'links'
+        // 1. Insert public metadata into 'links' table
+        // This data is publicly accessible via the [shortId] page
         const { error: linkError } = await supabaseAdmin
             .from('links')
             .insert({
@@ -135,7 +141,8 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: 'Failed to create link metadata' }, { status: 500 });
         }
 
-        // 2. Insert private secret into 'secrets'
+        // 2. Insert private secret into 'secrets' table
+        // This data is ONLY accessible by the server after payment verification
         const { error: secretError } = await supabaseAdmin
             .from('secrets')
             .insert({

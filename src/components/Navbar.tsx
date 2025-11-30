@@ -9,7 +9,7 @@ import { Sun, Moon, Lock } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useAccount, useReadContract } from 'wagmi';
 
-// V3 Contract Address
+// V3 Contract Address (Base Mainnet)
 const CONTRACT_ADDRESS = '0xD2F2964Ac4665B539e7De9Dc3B14b1A8173c02E0';
 
 export function Navbar() {
@@ -18,7 +18,7 @@ export function Navbar() {
     const [mounted, setMounted] = useState(false);
     const { address, isConnected } = useAccount();
 
-    // Read owner from contract
+    // Read owner from contract to conditionally show Admin tab
     const { data: ownerAddress } = useReadContract({
         address: CONTRACT_ADDRESS,
         abi: [{
@@ -42,6 +42,7 @@ export function Navbar() {
         { name: 'Feedback', href: '/feedback' },
     ];
 
+    // Only show Admin tab if the connected wallet is the contract owner
     if (isConnected && address && ownerAddress && typeof ownerAddress === 'string' && address.toLowerCase() === ownerAddress.toLowerCase()) {
         tabs.push({ name: 'Admin', href: '/admin' });
     }

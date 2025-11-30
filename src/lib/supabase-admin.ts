@@ -7,4 +7,7 @@ if (!supabaseUrl || !supabaseServiceRoleKey) {
     throw new Error('Missing Supabase URL or Service Role Key');
 }
 
+// Admin Supabase client for server-side operations
+// Uses the Service Role Key which bypasses RLS policies
+// WARNING: Never expose this client or key to the browser
 export const supabaseAdmin = createClient(supabaseUrl, supabaseServiceRoleKey);

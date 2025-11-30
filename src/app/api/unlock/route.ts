@@ -22,6 +22,7 @@ export async function POST(req: NextRequest) {
         }
 
         // 0. Verify Signature
+        // Ensure the request comes from the user claiming to have paid
         const message = `Unlock content for link: ${linkId}`;
         const isValidSignature = await verifyMessage({
             address: userAddress,
@@ -34,6 +35,7 @@ export async function POST(req: NextRequest) {
         }
 
         // 0.5 Replay Protection: Check if transaction hash was already used
+        // This prevents users from reusing the same transaction hash to unlock multiple times or different links
         const { data: existingTx, error: txCheckError } = await supabaseAdmin
             .from('used_transactions')
             .select('tx_hash')
@@ -69,6 +71,7 @@ export async function POST(req: NextRequest) {
         }
 
         // 3. Verify Event Logs
+        // We decode the 'Paid' event from the transaction logs to ensure the payment was routed correctly
         // Event: Paid(address indexed payer, address indexed receiver, string indexed linkId, uint256 amount, address token)
         const paidEventAbi = parseAbiItem('event Paid(address indexed payer, address indexed receiver, string indexed linkId, uint256 amount, address token)');
 
@@ -94,6 +97,7 @@ export async function POST(req: NextRequest) {
                         }
 
                         // Verify Receiver (Prevent Payment Diversion)
+                        // The payment must have gone to the creator of the link
                         if (args.receiver.toLowerCase() !== link.receiver_address.toLowerCase()) {
                             console.error(`Invalid receiver. Paid to: ${args.receiver}, Expected: ${link.receiver_address}`);
                             continue;
@@ -135,6 +139,7 @@ export async function POST(req: NextRequest) {
                         }
 
                         // Verify Payer
+                        // The payer must match the user requesting access
                         if (args.payer.toLowerCase() !== userAddress.toLowerCase()) {
                             continue;
                         }
@@ -178,6 +183,7 @@ export async function POST(req: NextRequest) {
         let finalTargetUrl = secret.target_url;
 
         // Generate Signed URL for files/images
+        // This grants temporary access (1 hour) to the private file in Supabase Storage
         if (secret.content_type === 'file' || secret.content_type === 'image') {
             const { data: signedData, error: signedError } = await supabaseAdmin
                 .storage
@@ -208,6 +214,7 @@ export async function POST(req: NextRequest) {
         }
 
         // Atomic increment using RPC
+        // We use a database function to safely increment the sales count without race conditions
         const { error: rpcError } = await supabaseAdmin
             .rpc('increment_sales_count', { row_id: linkId });
 

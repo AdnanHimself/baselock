@@ -14,7 +14,7 @@ import { useToast } from '@/components/ui/Toast';
 
 // Addresses
 const USDC_ADDRESS = '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913';
-// V3 Contract Address
+// V3 Contract Address (Base Mainnet)
 const CONTRACT_ADDRESS = '0xD2F2964Ac4665B539e7De9Dc3B14b1A8173c02E0';
 
 const BASELOCK_V3_ABI = [
@@ -87,20 +87,27 @@ const ERC20_ABI = [
 export default function UnlockPage() {
     const { shortId } = useParams();
     const { address, isConnected } = useAccount();
+
+    // Link Data State
     const [linkData, setLinkData] = useState<any>(null);
     const [loading, setLoading] = useState(true);
+
+    // Access State
     const [hasAccess, setHasAccess] = useState(false);
     const [checkingAccess, setCheckingAccess] = useState(false);
+
+    // Payment State
     const [isApproving, setIsApproving] = useState(false);
     const [paymentMethod, setPaymentMethod] = useState<'USDC' | 'ETH'>('USDC');
     const [ethPrice, setEthPrice] = useState<number | null>(null);
     const [tipAmount, setTipAmount] = useState('0');
     const [contentType, setContentType] = useState<'url' | 'text'>('url');
+
     const publicClient = usePublicClient();
     const { showToast } = useToast();
 
     useEffect(() => {
-        // Fetch ETH price
+        // Fetch ETH price from Coinbase API for conversion
         const fetchPrice = async () => {
             try {
                 const response = await fetch('https://api.coinbase.com/v2/prices/ETH-USD/spot');
@@ -108,7 +115,7 @@ export default function UnlockPage() {
                 setEthPrice(parseFloat(data.data.amount));
             } catch (e) {
                 console.error('Failed to fetch ETH price', e);
-                setEthPrice(3000); // Fallback
+                setEthPrice(3000); // Fallback price if API fails
             }
         };
         fetchPrice();
@@ -151,6 +158,8 @@ export default function UnlockPage() {
 
     const fetchLinkData = async () => {
         try {
+            // Fetch public link metadata from Supabase
+            // Note: The actual secret content is NOT fetched here, only metadata
             const { data, error } = await supabase
                 .from('links')
                 .select('id, title, price, receiver_address, created_at')
@@ -171,9 +180,11 @@ export default function UnlockPage() {
 
     const unlockContent = async (txHash: string) => {
         try {
+            // Sign a message to prove ownership of the wallet requesting access
             const message = `Unlock content for link: ${shortId}`;
             const signature = await signMessageAsync({ message });
 
+            // Call API to verify transaction and signature
             const response = await fetch('/api/unlock', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -189,6 +200,7 @@ export default function UnlockPage() {
 
             if (!response.ok) throw new Error(data.error || 'Failed to unlock');
 
+            // Success: Update state with the revealed content
             setLinkData((prev: any) => ({ ...prev, target_url: data.targetUrl, content_type: data.contentType }));
             setHasAccess(true);
             showToast('Content unlocked!', 'success');
@@ -202,6 +214,8 @@ export default function UnlockPage() {
         if (!address || !linkData || !publicClient) return;
         setCheckingAccess(true);
         try {
+            // Check for past "Paid" events for this user and link
+            // This allows users to re-access content they've already paid for
             const logs = await publicClient.getLogs({
                 address: CONTRACT_ADDRESS,
                 event: {
@@ -265,6 +279,7 @@ export default function UnlockPage() {
             const tip = parseFloat(tipAmount) || 0;
 
             if (paymentMethod === 'USDC') {
+                // USDC Payment: Call payToken on contract
                 const totalAmount = parseFloat(linkData.price) + tip;
                 writeContract({
                     address: CONTRACT_ADDRESS,
@@ -278,8 +293,9 @@ export default function UnlockPage() {
                     ],
                 });
             } else {
-                // ETH Payment
-                const ethRate = 0.0003;
+                // ETH Payment: Call payNative on contract
+                // Calculate required ETH based on current price
+                const ethRate = 0.0003; // Note: This should use dynamic price in production
                 const totalUSDC = parseFloat(linkData.price) + tip;
                 const totalETH = totalUSDC * ethRate;
 
