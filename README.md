@@ -28,7 +28,7 @@ JustUnlock is the simplest way to monetize digital content instantly. It allows 
 
 ### 1. Just Create 🛠️
 Connect your wallet, paste your secret link, and set a price (e.g., 0.005 ETH or USDC).
-*Result:* You get a unique URL (e.g., `justunlock.link/pay/xyz...`).
+*Result:* You get a unique URL (e.g., `justunlock.link/xyz...`).
 
 ### 2. Just Share 🚀
 Send the link to your client or post it on Twitter/Farcaster.
