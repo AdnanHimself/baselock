@@ -9,7 +9,6 @@ import { Send } from 'lucide-react';
 export default function FeedbackPage() {
     const { showToast } = useToast();
     const [category, setCategory] = useState('general');
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [message, setMessage] = useState('');
     const [contact, setContact] = useState('');
     const [loading, setLoading] = useState(false);
@@ -79,6 +78,17 @@ export default function FeedbackPage() {
                             <option value="feature">Feature Request</option>
                             <option value="other">Other</option>
                         </select>
+                    </div>
+
+                    <div className="space-y-2">
+                        <label className="text-sm font-medium">Message</label>
+                        <textarea
+                            value={message}
+                            onChange={(e) => setMessage(e.target.value)}
+                            placeholder="Tell us what you think..."
+                            required
+                            className="w-full bg-input/10 border border-input rounded-xl px-3 py-2 md:px-4 md:py-3 focus:outline-none focus:border-primary transition-colors placeholder:text-muted-foreground text-foreground min-h-[120px] resize-y text-sm md:text-base"
+                        />
                     </div>
 
                     <div className="space-y-2">
