@@ -49,7 +49,7 @@ export default function FeedbackPage() {
                         <Send className="w-8 h-8" />
                     </div>
                     <h2 className="text-2xl font-bold">Thank You!</h2>
-                    <p className="text-muted-foreground">Your feedback helps us improve BaseLock.</p>
+                    <p className="text-muted-foreground">Your feedback helps us improve JustUnlock.</p>
                     <Button onClick={() => setSubmitted(false)} variant="secondary">
                         Send Another
                     </Button>

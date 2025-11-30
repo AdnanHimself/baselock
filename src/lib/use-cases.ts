@@ -19,7 +19,7 @@ export const useCases: UseCase[] = [
         description: 'Stop no-shows. Require a USDC deposit before booking a call.',
         icon: Calendar,
         heroTitle: 'No Deposit, No Call.',
-        heroDescription: 'Eliminate time-wasters. Send a BaseLock link to collect a $50 deposit before you share your Calendly link.',
+        heroDescription: 'Eliminate time-wasters. Send a JustUnlock link to collect a $50 deposit before you share your Calendly link.',
         benefits: ['Instant USDC settlement', 'Filters out non-serious clients', 'Professional and automated', 'No monthly fees'],
         faq: [{ question: 'Can I refund?', answer: 'Yes, manually from your wallet.' }, { question: 'Do clients need a wallet?', answer: 'Yes, MetaMask or Coinbase Wallet.' }]
     },
