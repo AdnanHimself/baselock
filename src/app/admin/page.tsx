@@ -656,6 +656,7 @@ function SystemStatusTab({ supabase }: any) {
     // 3. Check Contract (Reactive to hook)
     useEffect(() => {
         if (contractOwner) {
+            // eslint-disable-next-line react-hooks/exhaustive-deps
             setStatuses(prev => ({ ...prev, contract: 'operational' }));
         } else {
             // If it takes too long or is undefined after some time, it might be an error, 
@@ -665,7 +666,28 @@ function SystemStatusTab({ supabase }: any) {
     }, [contractOwner]);
 
 
-    const StatusRow = ({ label, status }: { label: string, status: string }) => (
+    // StatusRow moved outside
+
+
+    return (
+        <div className="space-y-6">
+            <h2 className="text-2xl font-bold flex items-center gap-2">
+                <Activity className="w-6 h-6 text-primary" /> System Status
+            </h2>
+            <div className="space-y-4">
+                <StatusRow label="Database (Supabase)" status={statuses.supabase} />
+                <StatusRow label="Base Network (RPC)" status={statuses.rpc} />
+                <StatusRow label="Smart Contract (V3)" status={statuses.contract} />
+            </div>
+            <div className="p-4 bg-blue-500/10 border border-blue-500/20 rounded-xl text-sm text-blue-400">
+                <p>Status checks are performed in real-time from your browser.</p>
+            </div>
+        </div>
+    );
+}
+
+function StatusRow({ label, status }: { label: string, status: string }) {
+    return (
         <div className="flex items-center justify-between p-4 bg-secondary/10 rounded-xl border border-border">
             <span className="font-medium text-foreground">{label}</span>
             <div className="flex items-center gap-2">
@@ -682,22 +704,6 @@ function SystemStatusTab({ supabase }: any) {
                         <span className="text-red-500 text-sm font-bold">Outage</span>
                     </>
                 )}
-            </div>
-        </div>
-    );
-
-    return (
-        <div className="space-y-6">
-            <h2 className="text-2xl font-bold flex items-center gap-2">
-                <Activity className="w-6 h-6 text-primary" /> System Status
-            </h2>
-            <div className="space-y-4">
-                <StatusRow label="Database (Supabase)" status={statuses.supabase} />
-                <StatusRow label="Base Network (RPC)" status={statuses.rpc} />
-                <StatusRow label="Smart Contract (V3)" status={statuses.contract} />
-            </div>
-            <div className="p-4 bg-blue-500/10 border border-blue-500/20 rounded-xl text-sm text-blue-400">
-                <p>Status checks are performed in real-time from your browser.</p>
             </div>
         </div>
     );

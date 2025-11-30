@@ -8,7 +8,7 @@ import { parseUnits, parseEther } from 'viem';
 import { supabase } from '@/lib/supabase';
 import { Button } from '@/components/ui/Button';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Lock, Unlock, AlertCircle, Loader2, CheckCircle2, CreditCard, Coins, Copy, ExternalLink, Download } from 'lucide-react';
+import { Lock, Unlock, AlertCircle, Loader2, CheckCircle2, CreditCard, Coins, Copy, ExternalLink, Download, Music } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/components/ui/Toast';
 
@@ -101,7 +101,7 @@ export default function UnlockPage() {
     const [paymentMethod, setPaymentMethod] = useState<'USDC' | 'ETH'>('USDC');
     const [ethPrice, setEthPrice] = useState<number | null>(null);
     const [tipAmount, setTipAmount] = useState('0');
-    const [contentType, setContentType] = useState<'url' | 'text'>('url');
+
 
     const publicClient = usePublicClient();
     const { showToast } = useToast();
@@ -121,7 +121,7 @@ export default function UnlockPage() {
         fetchPrice();
     }, []);
 
-    const { data: hash, writeContract, isPending, error: writeError } = useWriteContract();
+    const { data: hash, writeContract, isPending } = useWriteContract();
     const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({ hash });
 
     // Read Allowance (USDC)
@@ -410,6 +410,45 @@ export default function UnlockPage() {
                                     >
                                         <Download className="w-4 h-4 mr-2" />
                                         Download Image
+                                    </Button>
+                                </div>
+                            </div>
+                        ) : linkData.content_type === 'video' ? (
+                            <div className="rounded-xl overflow-hidden border border-border bg-secondary/50 space-y-2">
+                                <video
+                                    src={linkData.target_url}
+                                    controls
+                                    className="w-full h-auto max-h-96 bg-black"
+                                />
+                                <div className="p-2 flex justify-center">
+                                    <Button
+                                        onClick={() => window.open(linkData.target_url, '_blank')}
+                                        className="w-full"
+                                    >
+                                        <Download className="w-4 h-4 mr-2" />
+                                        Download Video
+                                    </Button>
+                                </div>
+                            </div>
+                        ) : linkData.content_type === 'audio' ? (
+                            <div className="rounded-xl border border-border bg-secondary/50 p-6 space-y-4">
+                                <div className="flex justify-center">
+                                    <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
+                                        <Music className="w-8 h-8 text-primary" />
+                                    </div>
+                                </div>
+                                <audio
+                                    src={linkData.target_url}
+                                    controls
+                                    className="w-full"
+                                />
+                                <div className="flex justify-center">
+                                    <Button
+                                        onClick={() => window.open(linkData.target_url, '_blank')}
+                                        className="w-full"
+                                    >
+                                        <Download className="w-4 h-4 mr-2" />
+                                        Download Audio
                                     </Button>
                                 </div>
                             </div>

@@ -92,11 +92,16 @@ export async function POST(req: NextRequest) {
             const { fileTypeFromBuffer } = await import('file-type');
             const type = await fileTypeFromBuffer(buffer);
 
-            // Define allowed MIME types (Images and PDF only - No Zips, No Code)
-            const ALLOWED_MIMES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'application/pdf'];
+            // Define allowed MIME types (Images, PDF, Audio, Video)
+            const ALLOWED_MIMES = [
+                'image/jpeg', 'image/png', 'image/gif', 'image/webp',
+                'application/pdf',
+                'audio/mpeg', 'audio/wav', 'audio/x-wav',
+                'video/mp4', 'video/quicktime'
+            ];
 
             if (!type || !ALLOWED_MIMES.includes(type.mime)) {
-                return NextResponse.json({ error: `Invalid file type. Allowed: Images (JPEG, PNG, GIF, WebP) and PDF.` }, { status: 400 });
+                return NextResponse.json({ error: `Invalid file type. Allowed: Images, PDF, Audio, Video.` }, { status: 400 });
             }
 
             // Path: [slug]/[uuid]-[filename]

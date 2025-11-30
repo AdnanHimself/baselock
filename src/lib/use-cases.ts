@@ -1,10 +1,10 @@
-import { LucideIcon, FileText, Link, Image, File, MessageCircle, Lock, Zap, Heart, Key, Briefcase, Calendar, Shield, Star, UserCheck, Music, Video, Code, Database, Globe, Smartphone, PenTool, Camera, Headphones, Gift, ShoppingBag, Truck, Map, Book, Coffee, Box } from 'lucide-react';
+import { LucideIcon, FileText, File, MessageCircle, Lock, Zap, Heart, Key, Briefcase, Calendar, Shield, Star, UserCheck, Music, Video, Code, Database, Globe, Smartphone, PenTool, Camera, Headphones, Gift, ShoppingBag, Map, Book, Coffee, Box } from 'lucide-react';
 
 export interface UseCase {
     slug: string;
     title: string;
     description: string;
-    icon: any;
+    icon: LucideIcon;
     heroTitle: string;
     heroDescription: string;
     benefits: string[];

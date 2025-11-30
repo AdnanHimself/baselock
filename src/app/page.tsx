@@ -9,7 +9,14 @@ import { Button } from '@/components/ui/Button';
 import { useToast } from '@/components/ui/Toast';
 import { UseCaseCard } from "@/components/UseCaseCard";
 
-import Link from 'next/link';
+// Required Imports for this file:
+// - React: useState, useEffect
+// - Wagmi: useAccount, useSignMessage, useReadContract
+// - RainbowKit: useConnectModal
+// - Lucide React: Link, Copy, Upload, Check, Zap, Shield
+// - UI Components: Button, Toast, UseCaseCard
+
+
 
 // V3 Contract Address (Base Mainnet)
 // This contract handles the fee collection and payment routing
@@ -51,7 +58,7 @@ export default function Home() {
     functionName: 'feeBasisPoints',
   });
 
-  const feePercentage = feeBasisPoints ? Number(feeBasisPoints) / 100 : 1;
+
 
   // Helper to generate a random 6-character slug for the link
   const generateSlug = () => {
@@ -110,7 +117,16 @@ export default function Home() {
         formData.append('title', title || '');
         formData.append('price', price);
         formData.append('receiver_address', address);
-        formData.append('content_type', file.type.startsWith('image/') ? 'image' : 'file');
+        const isImage = file.type.startsWith('image/');
+        const isVideo = file.type.startsWith('video/');
+        const isAudio = file.type.startsWith('audio/');
+
+        let typeStr = 'file';
+        if (isImage) typeStr = 'image';
+        else if (isVideo) typeStr = 'video';
+        else if (isAudio) typeStr = 'audio';
+
+        formData.append('content_type', typeStr);
         formData.append('file', file);
         body = formData;
       } else {
@@ -303,7 +319,7 @@ export default function Home() {
                       <div className="border-2 border-dashed border-border hover:border-primary/50 rounded-2xl p-10 text-center hover:bg-secondary/30 transition-all cursor-pointer relative group-hover:scale-[1.01] duration-200">
                         <input
                           type="file"
-                          accept="image/*,application/pdf"
+                          accept="image/*,application/pdf,audio/*,video/*"
                           onChange={(e) => {
                             const selectedFile = e.target.files?.[0];
                             if (selectedFile) {
@@ -329,7 +345,7 @@ export default function Home() {
                             <span className="text-base font-medium text-foreground block">
                               {file ? file.name : "Click to upload file"}
                             </span>
-                            <span className="text-xs text-muted-foreground">Max 50MB (Images, PDF)</span>
+                            <span className="text-xs text-muted-foreground">Max 50MB (Images, PDF, Audio, Video)</span>
                           </div>
                         </div>
                       </div>

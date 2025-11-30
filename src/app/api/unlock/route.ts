@@ -36,7 +36,7 @@ export async function POST(req: NextRequest) {
 
         // 0.5 Replay Protection: Check if transaction hash was already used
         // This prevents users from reusing the same transaction hash to unlock multiple times or different links
-        const { data: existingTx, error: txCheckError } = await supabaseAdmin
+        const { data: existingTx } = await supabaseAdmin
             .from('used_transactions')
             .select('tx_hash')
             .eq('tx_hash', txHash)
