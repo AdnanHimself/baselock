@@ -216,7 +216,7 @@ export default function Home() {
             <div className="max-w-md mx-auto bg-card border border-border rounded-3xl p-8 space-y-6 animate-in fade-in zoom-in duration-300">
               <div className="text-center space-y-2">
                 <div className="w-16 h-16 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Check className="w-8 h-8 text-green-500" />
+                  <Lock className="w-8 h-8 text-green-500" />
                 </div>
                 <h3 className="text-2xl font-bold text-foreground">Link Created!</h3>
                 <p className="text-muted-foreground">Your paywall is ready. Share it to start earning.</p>
@@ -390,7 +390,7 @@ export default function Home() {
                   disabled={loading}
                   variant="high-contrast"
                   className="w-full h-12 text-base font-bold rounded-2xl transition-all"
-                  icon={loading ? undefined : (isConnected ? <Unlock className="w-5 h-5 text-red-500" /> : <Lock className="w-5 h-5 text-green-500" />)}
+                  icon={loading ? undefined : <Unlock className="w-5 h-5 text-red-500" />}
                 >
                   {isConnected ? 'Create Paywall' : 'Create Paywall'}
                 </Button>
