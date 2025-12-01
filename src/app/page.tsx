@@ -189,6 +189,7 @@ export default function Home() {
       ratingValue: '4.8',
       ratingCount: '120',
     },
+    image: 'https://justunlock.link/og-image.png',
   };
 
   return (
