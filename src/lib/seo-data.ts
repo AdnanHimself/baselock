@@ -12,6 +12,7 @@ export interface ContentType {
     name: string; // Singular, e.g. "Trading Signal"
     plural: string; // Plural, e.g. "Trading Signals"
     compatibleCategories: Category[];
+    associatedPlatformId?: string; // If set, this content is specific to this platform (e.g. Figma Kits -> Figma)
 }
 
 // --- 1. PLATFORMS (Dimension A) ---
@@ -44,21 +45,21 @@ export const platforms: Platform[] = [
     { id: 'coda', name: 'Coda', categories: ['productivity'] },
 
     // Video
-    { id: 'youtube', name: 'YouTube', categories: ['video', 'education'] },
+    { id: 'youtube', name: 'YouTube', categories: ['video', 'education', 'social'] },
     { id: 'vimeo', name: 'Vimeo', categories: ['video'] },
     { id: 'loom', name: 'Loom', categories: ['video'] },
     { id: 'wistia', name: 'Wistia', categories: ['video'] },
     { id: 'tiktok', name: 'TikTok', categories: ['video', 'social'] },
-    { id: 'twitch', name: 'Twitch', categories: ['video', 'gaming'] },
+    { id: 'twitch', name: 'Twitch', categories: ['video', 'gaming', 'social'] },
     { id: 'zoom', name: 'Zoom', categories: ['video', 'meeting'] }, // Also meeting
 
     // Code
-    { id: 'github', name: 'GitHub', categories: ['code'] },
+    { id: 'github', name: 'GitHub', categories: ['code', 'social'] },
     { id: 'gitlab', name: 'GitLab', categories: ['code'] },
     { id: 'bitbucket', name: 'Bitbucket', categories: ['code'] },
-    { id: 'replit', name: 'Replit', categories: ['code'] },
-    { id: 'codepen', name: 'CodePen', categories: ['code'] },
-    { id: 'stackoverflow', name: 'Stack Overflow', categories: ['code'] },
+    { id: 'replit', name: 'Replit', categories: ['code', 'social'] },
+    { id: 'codepen', name: 'CodePen', categories: ['code', 'social'] },
+    { id: 'stackoverflow', name: 'Stack Overflow', categories: ['code', 'social'] },
 
     // Meeting / Consulting
     { id: 'calendly', name: 'Calendly', categories: ['meeting'] },
@@ -71,15 +72,15 @@ export const platforms: Platform[] = [
     { id: 'canva', name: 'Canva', categories: ['design'] },
     { id: 'adobe-xd', name: 'Adobe XD', categories: ['design'] },
     { id: 'sketch', name: 'Sketch', categories: ['design'] },
-    { id: 'behance', name: 'Behance', categories: ['design'] },
-    { id: 'dribbble', name: 'Dribbble', categories: ['design'] },
+    { id: 'behance', name: 'Behance', categories: ['design', 'social'] },
+    { id: 'dribbble', name: 'Dribbble', categories: ['design', 'social'] },
     { id: 'pinterest', name: 'Pinterest', categories: ['design', 'social'] },
 
     // Music
-    { id: 'soundcloud', name: 'SoundCloud', categories: ['music'] },
-    { id: 'spotify', name: 'Spotify', categories: ['music'] },
-    { id: 'bandcamp', name: 'Bandcamp', categories: ['music'] },
-    { id: 'mixcloud', name: 'Mixcloud', categories: ['music'] },
+    { id: 'soundcloud', name: 'SoundCloud', categories: ['music', 'social'] },
+    { id: 'spotify', name: 'Spotify', categories: ['music', 'social'] },
+    { id: 'bandcamp', name: 'Bandcamp', categories: ['music', 'social'] },
+    { id: 'mixcloud', name: 'Mixcloud', categories: ['music', 'social'] },
 
     // Education / Courses
     { id: 'teachable', name: 'Teachable', categories: ['education'] },
@@ -100,16 +101,16 @@ export const contentTypes: ContentType[] = [
     { id: 'community-access', name: 'Community Access', plural: 'Community Access', compatibleCategories: ['messaging', 'social'] },
 
     // Templates
-    { id: 'notion-template', name: 'Notion Template', plural: 'Notion Templates', compatibleCategories: ['productivity', 'writing'] },
-    { id: 'obsidian-vault', name: 'Obsidian Vault', plural: 'Obsidian Vaults', compatibleCategories: ['productivity', 'writing'] },
+    { id: 'notion-template', name: 'Notion Template', plural: 'Notion Templates', compatibleCategories: ['productivity', 'writing'], associatedPlatformId: 'notion' },
+    { id: 'obsidian-vault', name: 'Obsidian Vault', plural: 'Obsidian Vaults', compatibleCategories: ['productivity', 'writing'], associatedPlatformId: 'obsidian' },
     { id: 'excel-template', name: 'Excel Template', plural: 'Excel Templates', compatibleCategories: ['cloud', 'productivity'] },
-    { id: 'google-sheet', name: 'Google Sheet', plural: 'Google Sheets', compatibleCategories: ['cloud', 'productivity'] },
-    { id: 'airtable-base', name: 'Airtable Base', plural: 'Airtable Bases', compatibleCategories: ['productivity'] },
-    { id: 'trello-board', name: 'Trello Board', plural: 'Trello Boards', compatibleCategories: ['productivity'] },
+    { id: 'google-sheet', name: 'Google Sheet', plural: 'Google Sheets', compatibleCategories: ['cloud', 'productivity'], associatedPlatformId: 'google-drive' },
+    { id: 'airtable-base', name: 'Airtable Base', plural: 'Airtable Bases', compatibleCategories: ['productivity'], associatedPlatformId: 'airtable' },
+    { id: 'trello-board', name: 'Trello Board', plural: 'Trello Boards', compatibleCategories: ['productivity'], associatedPlatformId: 'trello' },
 
     // Design Assets
-    { id: 'figma-kit', name: 'Figma UI Kit', plural: 'Figma UI Kits', compatibleCategories: ['design'] },
-    { id: 'canva-template', name: 'Canva Template', plural: 'Canva Templates', compatibleCategories: ['design'] },
+    { id: 'figma-kit', name: 'Figma UI Kit', plural: 'Figma UI Kits', compatibleCategories: ['design'], associatedPlatformId: 'figma' },
+    { id: 'canva-template', name: 'Canva Template', plural: 'Canva Templates', compatibleCategories: ['design'], associatedPlatformId: 'canva' },
     { id: 'lightroom-preset', name: 'Lightroom Preset', plural: 'Lightroom Presets', compatibleCategories: ['cloud', 'design'] },
     { id: 'photoshop-brush', name: 'Photoshop Brush', plural: 'Photoshop Brushes', compatibleCategories: ['cloud', 'design'] },
     { id: '3d-model', name: '3D Model', plural: '3D Models', compatibleCategories: ['cloud', 'design'] },
@@ -161,27 +162,42 @@ export function generateSeoCombinations(): SeoCombination[] {
 
     for (const platform of platforms) {
         for (const type of contentTypes) {
-            // FILTER: Check if the platform has at least one category compatible with the content type
-            const isCompatible = platform.categories.some(cat => type.compatibleCategories.includes(cat));
+            // FILTER 1: Basic Category Compatibility
+            const isCategoryCompatible = platform.categories.some(cat => type.compatibleCategories.includes(cat));
 
-            if (isCompatible) {
-                combinations.push({
-                    slug: `sell-${type.id}-on-${platform.id}`,
-                    title: `Sell ${type.plural} on ${platform.name} with Crypto`,
-                    description: `The easiest way to sell ${type.plural} on ${platform.name}. Create a secure paywall and accept USDC or ETH.`,
-                    platform,
-                    contentType: type
-                });
+            if (!isCategoryCompatible) continue;
 
-                // Variant: "Monetize"
-                combinations.push({
-                    slug: `monetize-${platform.id}-${type.id}`,
-                    title: `Monetize ${platform.name} ${type.plural} with USDC`,
-                    description: `Monetize your ${platform.name} ${type.plural} instantly. Gate access with a secure crypto paywall.`,
-                    platform,
-                    contentType: type
-                });
+            // FILTER 2: Specific Platform Association (The "Figma Kit on Canva" fix)
+            // If a content type is associated with a specific platform (e.g. Figma Kit -> Figma),
+            // we ONLY allow it on:
+            // 1. That specific platform (Figma)
+            // 2. "Distribution" platforms (Social, Messaging, etc.)
+            // We DO NOT allow it on other "Tool" platforms in the same category (e.g. Canva)
+            if (type.associatedPlatformId) {
+                const isAssociatedPlatform = platform.id === type.associatedPlatformId;
+                const isDistributionPlatform = platform.categories.some(cat => ['social', 'messaging', 'education'].includes(cat));
+
+                if (!isAssociatedPlatform && !isDistributionPlatform) {
+                    continue;
+                }
             }
+
+            combinations.push({
+                slug: `sell-${type.id}-on-${platform.id}`,
+                title: `Sell ${type.plural} on ${platform.name} with Crypto`,
+                description: `The easiest way to sell ${type.plural} on ${platform.name}. Create a secure paywall and accept USDC or ETH.`,
+                platform,
+                contentType: type
+            });
+
+            // Variant: "Monetize"
+            combinations.push({
+                slug: `monetize-${platform.id}-${type.id}`,
+                title: `Monetize ${platform.name} ${type.plural} with USDC`,
+                description: `Monetize your ${platform.name} ${type.plural} instantly. Gate access with a secure crypto paywall.`,
+                platform,
+                contentType: type
+            });
         }
     }
 
