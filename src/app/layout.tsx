@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     template: "%s | JustUnlock"
   },
   // This is read by humans on Google & Twitter. It must encourage clicking:
-  description: "Turn URLs, secret text, images, videos, and PDFs into digital products. The fastest way to accept USDC & ETH for your content. No account needed, instant payouts.",
+  description: "Turn URLs, secret text, images, and PDFs into digital products. The fastest way to accept USDC & ETH for your content. No account needed, instant payouts.",
 
   // Your keyword list (Technically integrated):
   keywords: [

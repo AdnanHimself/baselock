@@ -118,13 +118,8 @@ export default function Home() {
         formData.append('price', price);
         formData.append('receiver_address', address);
         const isImage = file.type.startsWith('image/');
-        const isVideo = file.type.startsWith('video/');
-        const isAudio = file.type.startsWith('audio/');
-
         let typeStr = 'file';
         if (isImage) typeStr = 'image';
-        else if (isVideo) typeStr = 'video';
-        else if (isAudio) typeStr = 'audio';
 
         formData.append('content_type', typeStr);
         formData.append('file', file);
@@ -155,9 +150,9 @@ export default function Home() {
       // 4. Success: Show the created link
       setCreatedLink(`${window.location.origin}/${slug}`);
       showToast('Link created successfully!', 'success');
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
-      showToast('Failed to create link', 'error');
+      showToast(err.message || 'Failed to create link', 'error');
     } finally {
       setLoading(false);
     }
@@ -320,7 +315,7 @@ export default function Home() {
                       <div className="border-2 border-dashed border-border hover:border-primary/50 rounded-2xl p-10 text-center hover:bg-secondary/30 transition-all cursor-pointer relative group-hover:scale-[1.01] duration-200">
                         <input
                           type="file"
-                          accept="image/*,application/pdf,audio/*,video/*"
+                          accept="image/*,application/pdf"
                           onChange={(e) => {
                             const selectedFile = e.target.files?.[0];
                             if (selectedFile) {
@@ -346,7 +341,7 @@ export default function Home() {
                             <span className="text-base font-medium text-foreground block">
                               {file ? file.name : "Click to upload file"}
                             </span>
-                            <span className="text-xs text-muted-foreground">Max 50MB (Images, PDF, Audio, Video)</span>
+                            <span className="text-xs text-muted-foreground">Max 50MB (Images, PDF)</span>
                           </div>
                         </div>
                       </div>
