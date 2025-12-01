@@ -53,7 +53,7 @@ export function Navbar() {
         <nav className="w-full border-b border-border bg-background transition-colors duration-300 sticky top-0 z-50 backdrop-blur-md bg-background/80">
             <div className="px-4 md:px-6 flex flex-col md:flex-row md:items-center md:justify-between min-h-[4rem]">
                 {/* Top Row: Logo + Actions (Mobile) / Logo + Links + Actions (Desktop) */}
-                <div className="flex items-center w-full h-14 md:h-auto">
+                <div className="flex items-center w-full min-h-[3.5rem] py-2 md:h-auto md:py-0">
                     {/* Logo */}
                     <Link href="/" className="flex items-center gap-2 text-xl font-bold text-foreground hover:text-primary transition-colors shrink-0 mr-8">
                         <div className="relative w-8 h-8 rounded-lg overflow-hidden">
@@ -106,7 +106,7 @@ export function Navbar() {
                 </div>
 
                 {/* Mobile Links (Second Row) */}
-                <div className="md:hidden flex items-center gap-0.5 overflow-x-auto no-scrollbar pb-2 -mx-4 px-4">
+                <div className="md:hidden flex items-center gap-0.5 overflow-x-auto no-scrollbar pb-3 pt-2 -mx-4 px-4">
                     {tabs.map((tab) => (
                         <Link
                             key={tab.href}
