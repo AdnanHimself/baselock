@@ -34,8 +34,8 @@ export const Button: React.FC<ButtonProps> = ({
             disabled={isLoading || disabled}
             {...props}
         >
-            {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : icon}
             {children}
+            {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : icon}
         </button>
     );
 };

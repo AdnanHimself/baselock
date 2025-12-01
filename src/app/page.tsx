@@ -100,7 +100,7 @@ export default function Home() {
     try {
       // 1. Sign Message for Security (DoS Protection)
       // We require a signature to prove ownership of the wallet creating the link
-      const message = `Create Lock: ${slug} `;
+      const message = `Create Lock: ${slug}`;
       const signature = await signMessageAsync({ message });
 
       let body;
