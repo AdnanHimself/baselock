@@ -10,11 +10,11 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   metadataBase: new URL('https://justunlock.link'),
   title: {
-    default: "JustUnlock | Monetize Any Link with Crypto",
+    default: "JustUnlock | Pay-to-Reveal & Monetize with Crypto",
     template: "%s | JustUnlock"
   },
   // This is read by humans on Google & Twitter. It must encourage clicking:
-  description: "The simplest Gumroad alternative for crypto. Turn any URL, Telegram invite, or file into a digital product. Instant payouts in USDC/ETH on Base. No sign-ups.",
+  description: "Turn URLs, secret text, images, videos, and PDFs into digital products. The fastest way to accept USDC & ETH for your content. No account needed, instant payouts.",
 
   // Your keyword list (Technically integrated):
   keywords: [
@@ -30,8 +30,8 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     url: "https://justunlock.link",
-    title: "JustUnlock | Monetize Any Link with Crypto",
-    description: "Turn any URL, image, or text into a digital product. Instant payouts in USDC/ETH on Base.",
+    title: "JustUnlock | Pay-to-Reveal & Monetize with Crypto",
+    description: "Turn URLs, secret text, images, videos, and PDFs into digital products. The fastest way to accept USDC & ETH for your content. No account needed, instant payouts.",
     siteName: "JustUnlock",
     images: [
       {
@@ -46,8 +46,8 @@ export const metadata: Metadata = {
   // Twitter / X Preview
   twitter: {
     card: "summary_large_image",
-    title: "JustUnlock | Monetize Any Link with Crypto",
-    description: "Turn any URL, image, or text into a digital product. Instant payouts in USDC/ETH on Base.",
+    title: "JustUnlock | Pay-to-Reveal & Monetize with Crypto",
+    description: "Turn URLs, secret text, images, videos, and PDFs into digital products. The fastest way to accept USDC & ETH for your content. No account needed, instant payouts.",
     // creator: "@your_twitter_handle", // If you don't have one, delete this line
     images: ["/og-image.png"],
   },
