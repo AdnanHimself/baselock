@@ -23,10 +23,11 @@ export function Footer() {
                     <div className="space-y-4">
                         <h3 className="font-semibold text-foreground">Use Cases</h3>
                         <ul className="space-y-2 text-sm text-muted-foreground">
-                            <li><Link href="/use-cases/telegram-access" className="hover:text-primary transition-colors">Telegram Access</Link></li>
-                            <li><Link href="/use-cases/consulting-deposit" className="hover:text-primary transition-colors">Consulting Deposit</Link></li>
-                            <li><Link href="/use-cases/discord-invite" className="hover:text-primary transition-colors">Discord Invite</Link></li>
-                            <li><Link href="/use-cases/date-deposit" className="hover:text-primary transition-colors">Date Deposit</Link></li>
+                            <li><Link href="/use-cases/monetize-telegram-trading-signals" className="hover:text-primary transition-colors">Telegram Signals</Link></li>
+                            <li><Link href="/use-cases/sell-notion-templates-on-notion" className="hover:text-primary transition-colors">Notion Templates</Link></li>
+                            <li><Link href="/use-cases/monetize-discord-alpha-group" className="hover:text-primary transition-colors">Discord Alpha</Link></li>
+                            <li><Link href="/use-cases/sell-source-code-on-github" className="hover:text-primary transition-colors">Sell Code</Link></li>
+                            <li><Link href="/use-cases" className="hover:text-primary transition-colors font-medium text-primary">View All Use Cases &rarr;</Link></li>
                         </ul>
                     </div>
 

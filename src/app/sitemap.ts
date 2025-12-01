@@ -1,29 +1,30 @@
-import { MetadataRoute } from 'next'
-import { useCases } from '@/lib/use-cases'
+import { MetadataRoute } from 'next';
+import { generateSeoCombinations } from '@/lib/seo-data';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-    const baseUrl = 'https://justunlock.link'
+    const baseUrl = 'https://justunlock.link'; // Production URL
+    const combinations = generateSeoCombinations();
 
-    const useCaseUrls = useCases.map((useCase) => ({
-        url: `${baseUrl}/use-cases/${useCase.slug}`,
+    // Static routes
+    const routes = [
+        '',
+        '/how-it-works',
+        '/feedback',
+        '/use-cases',
+    ].map((route) => ({
+        url: `${baseUrl}${route}`,
         lastModified: new Date(),
         changeFrequency: 'weekly' as const,
-        priority: 0.7,
-    }))
+        priority: route === '' ? 1 : 0.8,
+    }));
 
-    return [
-        {
-            url: baseUrl,
-            lastModified: new Date(),
-            changeFrequency: 'daily',
-            priority: 1,
-        },
-        {
-            url: `${baseUrl}/how-it-works`,
-            lastModified: new Date(),
-            changeFrequency: 'weekly',
-            priority: 0.8,
-        },
-        ...useCaseUrls,
-    ]
+    // Dynamic SEO routes
+    const seoRoutes = combinations.map((combo) => ({
+        url: `${baseUrl}/use-cases/${combo.slug}`,
+        lastModified: new Date(),
+        changeFrequency: 'monthly' as const,
+        priority: 0.6,
+    }));
+
+    return [...routes, ...seoRoutes];
 }
