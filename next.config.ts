@@ -12,6 +12,7 @@ const nextConfig: NextConfig = {
       'sonic-boom': false,
       'desm': false,
       'pino-pretty': false,
+      '@react-native-async-storage/async-storage': false,
     };
     return config;
   },

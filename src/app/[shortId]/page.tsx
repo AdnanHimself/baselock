@@ -84,12 +84,23 @@ const ERC20_ABI = [
     }
 ] as const;
 
+// Types
+interface LinkData {
+    id: string;
+    title: string;
+    price: string; // Supabase returns numbers as strings sometimes, or we parse it. Let's check usage. parseFloat is used.
+    receiver_address: string;
+    created_at: string;
+    target_url?: string;
+    content_type?: string;
+}
+
 export default function UnlockPage() {
     const { shortId } = useParams();
     const { address, isConnected } = useAccount();
 
     // Link Data State
-    const [linkData, setLinkData] = useState<any>(null);
+    const [linkData, setLinkData] = useState<LinkData | null>(null);
     const [loading, setLoading] = useState(true);
 
     // Access State
@@ -201,7 +212,7 @@ export default function UnlockPage() {
             if (!response.ok) throw new Error(data.error || 'Failed to unlock');
 
             // Success: Update state with the revealed content
-            setLinkData((prev: any) => ({ ...prev, target_url: data.targetUrl, content_type: data.contentType }));
+            setLinkData((prev) => prev ? ({ ...prev, target_url: data.targetUrl, content_type: data.contentType }) : null);
             setHasAccess(true);
             showToast('Content unlocked!', 'success');
         } catch (err) {
@@ -287,7 +298,7 @@ export default function UnlockPage() {
                     functionName: 'payToken',
                     args: [
                         USDC_ADDRESS,
-                        linkData.receiver_address,
+                        linkData.receiver_address as `0x${string}`,
                         shortId as string,
                         parseUnits(totalAmount.toString(), 6)
                     ],
@@ -304,7 +315,7 @@ export default function UnlockPage() {
                     abi: BASELOCK_V3_ABI,
                     functionName: 'payNative',
                     args: [
-                        linkData.receiver_address,
+                        linkData.receiver_address as `0x${string}`,
                         shortId as string
                     ],
                     value: parseEther(totalETH.toFixed(18))
@@ -388,8 +399,10 @@ export default function UnlockPage() {
                                 <button
                                     className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity bg-background/50 hover:bg-background p-2 rounded-md text-foreground"
                                     onClick={() => {
-                                        navigator.clipboard.writeText(linkData.target_url);
-                                        showToast('Copied to clipboard', 'success');
+                                        if (linkData.target_url) {
+                                            navigator.clipboard.writeText(linkData.target_url);
+                                            showToast('Copied to clipboard', 'success');
+                                        }
                                     }}
                                 >
                                     <Copy className="w-4 h-4" />
@@ -405,7 +418,7 @@ export default function UnlockPage() {
                                 />
                                 <div className="p-2 flex justify-center">
                                     <Button
-                                        onClick={() => window.open(linkData.target_url, '_blank')}
+                                        onClick={() => linkData.target_url && window.open(linkData.target_url, '_blank')}
                                         className="w-full"
                                     >
                                         <Download className="w-4 h-4 mr-2" />
@@ -422,7 +435,7 @@ export default function UnlockPage() {
                                 />
                                 <div className="p-2 flex justify-center">
                                     <Button
-                                        onClick={() => window.open(linkData.target_url, '_blank')}
+                                        onClick={() => linkData.target_url && window.open(linkData.target_url, '_blank')}
                                         className="w-full"
                                     >
                                         <Download className="w-4 h-4 mr-2" />
@@ -444,7 +457,7 @@ export default function UnlockPage() {
                                 />
                                 <div className="flex justify-center">
                                     <Button
-                                        onClick={() => window.open(linkData.target_url, '_blank')}
+                                        onClick={() => linkData.target_url && window.open(linkData.target_url, '_blank')}
                                         className="w-full"
                                     >
                                         <Download className="w-4 h-4 mr-2" />
@@ -455,12 +468,6 @@ export default function UnlockPage() {
                         ) : linkData.content_type === 'text/plain' ? (
                             <div className="relative group">
                                 <pre className="p-4 bg-secondary/50 rounded-xl border border-border overflow-x-auto text-sm font-mono whitespace-pre-wrap break-words max-h-64 md:max-h-96">
-                                    {/* We need to fetch the content if it's a file, but for now let's assume it might be a direct link. 
-                                        Actually, for file uploads, target_url is a path. We need a download button. 
-                                        Wait, if it's a .txt file upload, it's a FILE, not raw text. 
-                                        So it should be treated as a file download or a fetch-and-display.
-                                        Let's stick to Download for now to be safe and consistent with other files.
-                                    */}
                                     <div className="flex flex-col items-center justify-center py-8 text-muted-foreground gap-2">
                                         <div className="w-12 h-12 rounded-full bg-blue-500/10 flex items-center justify-center">
                                             <span className="text-xs font-bold text-blue-500">TXT</span>
@@ -470,7 +477,7 @@ export default function UnlockPage() {
                                 </pre>
                                 <div className="p-2 flex justify-center">
                                     <Button
-                                        onClick={() => window.open(linkData.target_url, '_blank')}
+                                        onClick={() => linkData.target_url && window.open(linkData.target_url, '_blank')}
                                         className="w-full"
                                     >
                                         <Download className="w-4 h-4 mr-2" />
@@ -481,7 +488,7 @@ export default function UnlockPage() {
                         ) : linkData.content_type === 'file' ? (
                             <Button
                                 className="w-full gap-2 text-lg h-12 md:h-14 transition-all"
-                                onClick={() => window.open(linkData.target_url, '_blank')}
+                                onClick={() => linkData.target_url && window.open(linkData.target_url, '_blank')}
                             >
                                 <Download className="w-5 h-5" />
                                 Download File
@@ -489,7 +496,7 @@ export default function UnlockPage() {
                         ) : (
                             <Button
                                 className="w-full gap-2 text-lg h-12 md:h-14 transition-all"
-                                onClick={() => window.open(linkData.target_url, '_blank')}
+                                onClick={() => linkData.target_url && window.open(linkData.target_url, '_blank')}
                             >
                                 <ExternalLink className="w-5 h-5" />
                                 Access Content
