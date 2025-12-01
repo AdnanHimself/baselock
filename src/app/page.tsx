@@ -160,9 +160,10 @@ export default function Home() {
       // 4. Success: Show the created link
       setCreatedLink(`${window.location.origin}/${slug}`);
       showToast('Link created successfully!', 'success');
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error(err);
-      showToast(err.message || 'Failed to create link', 'error');
+      const errorMessage = err instanceof Error ? err.message : 'Failed to create link';
+      showToast(errorMessage, 'error');
     } finally {
       setLoading(false);
     }

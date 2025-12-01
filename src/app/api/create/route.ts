@@ -3,7 +3,7 @@ import { supabaseAdmin } from '@/lib/supabase-admin';
 
 export async function POST(req: NextRequest) {
     let uploadedFilePath: string | null = null;
-    console.log('[API] Create Link Request Started');
+
 
     try {
         let slug, title, price, receiver_address, target_url, content_type;
@@ -177,11 +177,12 @@ export async function POST(req: NextRequest) {
         console.log('[API] Link created successfully:', slug);
         return NextResponse.json({ success: true, slug });
 
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error('[API] Unexpected Error:', error);
         if (uploadedFilePath) {
             await supabaseAdmin.storage.from('locked_content').remove([uploadedFilePath]);
         }
-        return NextResponse.json({ error: 'Internal Server Error: ' + (error.message || String(error)) }, { status: 500 });
+        const errorMessage = error instanceof Error ? error.message : 'Internal Server Error';
+        return NextResponse.json({ error: errorMessage }, { status: 500 });
     }
 }
