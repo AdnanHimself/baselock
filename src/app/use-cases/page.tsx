@@ -120,7 +120,7 @@ export default function UseCasesHub() {
                         JustUnlock works with ANY link or file. You don&apos;t need a specific integration.
                     </p>
                     <Link href="/">
-                        <Button size="lg" className="h-16 px-10 text-xl rounded-full gap-2 shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300">
+                        <Button className="h-16 px-10 text-xl rounded-full gap-2 shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300">
                             Create Link Now <ArrowRight className="w-6 h-6" />
                         </Button>
                     </Link>
