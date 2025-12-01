@@ -255,7 +255,7 @@ export default function Home() {
                   <button
                     type="button"
                     onClick={() => setContentType('url')}
-                    className={`flex-1 py-3 text-sm font-semibold rounded-xl transition-all ${contentType === 'url'
+                    className={`flex-1 py-3 text-sm font-semibold rounded-xl transition-all cursor-pointer ${contentType === 'url'
                       ? 'bg-background text-foreground ring-1 ring-black/5 dark:ring-white/10'
                       : 'text-muted-foreground hover:text-foreground hover:bg-background/50'
                       }`}
@@ -265,7 +265,7 @@ export default function Home() {
                   <button
                     type="button"
                     onClick={() => setContentType('text')}
-                    className={`flex-1 py-3 text-sm font-semibold rounded-xl transition-all ${contentType === 'text'
+                    className={`flex-1 py-3 text-sm font-semibold rounded-xl transition-all cursor-pointer ${contentType === 'text'
                       ? 'bg-background text-foreground ring-1 ring-black/5 dark:ring-white/10'
                       : 'text-muted-foreground hover:text-foreground hover:bg-background/50'
                       }`}
@@ -275,7 +275,7 @@ export default function Home() {
                   <button
                     type="button"
                     onClick={() => setContentType('file')}
-                    className={`flex-1 py-3 text-sm font-semibold rounded-xl transition-all ${contentType === 'file'
+                    className={`flex-1 py-3 text-sm font-semibold rounded-xl transition-all cursor-pointer ${contentType === 'file'
                       ? 'bg-background text-foreground ring-1 ring-black/5 dark:ring-white/10'
                       : 'text-muted-foreground hover:text-foreground hover:bg-background/50'
                       }`}
