@@ -4,7 +4,7 @@
 import { useState, useEffect } from 'react';
 import { useAccount, useSignMessage, useReadContract } from 'wagmi';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
-import { Link as LinkIcon, Copy, Upload, Check, Zap, Shield } from 'lucide-react';
+import { Link as LinkIcon, Copy, Upload, Check, Zap, Shield, Lock, Unlock } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { useToast } from '@/components/ui/Toast';
 import { UseCaseCard } from "@/components/UseCaseCard";
@@ -388,8 +388,9 @@ export default function Home() {
                   type="submit"
                   isLoading={loading}
                   disabled={loading}
-                  variant="gold"
+                  variant="high-contrast"
                   className="w-full h-12 text-base font-bold rounded-2xl transition-all"
+                  icon={loading ? undefined : (isConnected ? <Unlock className="w-5 h-5 text-red-500" /> : <Lock className="w-5 h-5 text-green-500" />)}
                 >
                   {isConnected ? 'Create Paywall' : 'Create Paywall'}
                 </Button>
