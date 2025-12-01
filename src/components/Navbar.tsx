@@ -76,7 +76,7 @@ export function Navbar() {
                                 className={twMerge(
                                     "px-4 py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap",
                                     pathname === tab.href
-                                        ? "text-primary border-b-2 border-primary"
+                                        ? "bg-primary text-primary-foreground border border-primary"
                                         : "text-muted-foreground hover:text-primary hover:bg-primary/5"
                                 )}
                             >
@@ -114,7 +114,7 @@ export function Navbar() {
                             className={twMerge(
                                 "px-2.5 py-1 rounded-lg text-xs font-medium transition-colors whitespace-nowrap",
                                 pathname === tab.href
-                                    ? "text-primary border-b-2 border-primary"
+                                    ? "bg-primary text-primary-foreground border border-primary"
                                     : "text-muted-foreground hover:text-foreground hover:bg-secondary"
                             )}
                         >
