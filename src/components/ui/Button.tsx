@@ -35,9 +35,11 @@ export const Button: React.FC<ButtonProps> = ({
             {...props}
         >
             <span className="flex-1 text-center">{children}</span>
-            <div className="flex items-center pl-3 border-l border-current/20 h-full">
-                {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : icon}
-            </div>
+            {(isLoading || icon) && (
+                <div className="flex items-center pl-3 border-l border-current/20 h-full">
+                    {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : icon}
+                </div>
+            )}
         </button>
     );
 };

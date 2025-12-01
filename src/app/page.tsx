@@ -482,13 +482,13 @@ export default function Home() {
           </div>
 
           {/* Use Cases Section */}
-          <div className="space-y-10">
-            <div className="text-center space-y-2">
-              <h2 className="text-3xl font-bold">What can you sell with JustUnlock?</h2>
-              <p className="text-muted-foreground text-lg">Perfect for micro-transactions and time-sensitive value.</p>
+          <div className="space-y-16 md:space-y-24 py-12 md:py-20">
+            <div className="text-center space-y-4">
+              <h2 className="text-3xl md:text-4xl font-bold">What can you sell with JustUnlock?</h2>
+              <p className="text-muted-foreground text-lg max-w-2xl mx-auto">Perfect for micro-transactions and time-sensitive value.</p>
             </div>
 
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 text-left">
+            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3 text-left">
               <UseCaseCard
                 icon="💬"
                 title="Telegram & Discord"
@@ -521,11 +521,11 @@ export default function Home() {
               />
             </div>
 
-            <div className="flex justify-center pt-4">
+            <div className="flex justify-center pt-8">
               <Link href="/use-cases">
-                <Button variant="secondary" className="rounded-full px-8 h-12 text-base gap-2 group">
+                <Button variant="secondary" className="rounded-full px-12 h-14 text-lg gap-3 group min-w-[240px]">
                   View All Use Cases
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </Button>
               </Link>
             </div>
