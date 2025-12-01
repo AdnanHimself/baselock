@@ -233,7 +233,7 @@ export default function Home() {
               </div>
 
               <Button
-                variant="secondary"
+                variant="gold"
                 className="w-full h-12 text-base rounded-xl"
                 onClick={() => {
                   setCreatedLink(null);
