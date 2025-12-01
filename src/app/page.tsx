@@ -3,8 +3,9 @@
 
 import { useState, useEffect } from 'react';
 import { useAccount, useSignMessage, useReadContract } from 'wagmi';
+import Link from 'next/link';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
-import { Link as LinkIcon, Copy, Upload, Check, Zap, Shield, Lock, Unlock } from 'lucide-react';
+import { Link as LinkIcon, Copy, Upload, Check, Zap, Shield, Lock, Unlock, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { useToast } from '@/components/ui/Toast';
 import { UseCaseCard } from "@/components/UseCaseCard";
@@ -517,6 +518,15 @@ export default function Home() {
                 title="Digital Assets"
                 description="Sell presets, ebooks, or design files. Upload directly or link to your cloud storage."
               />
+            </div>
+
+            <div className="flex justify-center pt-4">
+              <Link href="/use-cases">
+                <Button variant="outline" className="rounded-full px-8 h-12 text-base gap-2 group">
+                  View All Use Cases
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </Button>
+              </Link>
             </div>
           </div>
 

@@ -1,6 +1,10 @@
 
 
 
+import Link from 'next/link';
+import { Button } from '@/components/ui/Button';
+import { ArrowRight } from 'lucide-react';
+
 export default function HowItWorksPage() {
     return (
         <main className="min-h-[calc(100vh-7rem)] bg-background text-foreground p-4 md:p-8 transition-colors">
@@ -99,10 +103,17 @@ export default function HowItWorksPage() {
                         </div>
                     </div>
 
-                    <div className="text-center bg-secondary/30 p-6 rounded-2xl">
+                    <div className="text-center bg-secondary/30 p-6 rounded-2xl space-y-4">
                         <p className="font-medium text-foreground text-lg">
                             &quot;Think of JustUnlock as a digital vending machine. Quick, easy, and direct.&quot;
                         </p>
+                        <div className="pt-2">
+                            <Link href="/use-cases">
+                                <Button variant="outline" className="rounded-full px-6 gap-2">
+                                    Explore Use Cases <ArrowRight className="w-4 h-4" />
+                                </Button>
+                            </Link>
+                        </div>
                     </div>
                 </div>
 
