@@ -62,10 +62,11 @@ export default async function UseCasePage({ params }: { params: Promise<{ slug: 
                             Accept USDC & ETH directly to your wallet.
                         </p>
                         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4 animate-in fade-in slide-in-from-bottom-10 duration-700 delay-200">
-                            <Link href="/">
-                                <Button className="h-16 px-10 text-xl rounded-full gap-2 shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300">
-                                    Start Selling Now
-                                </Button>
+                            <Link
+                                href="/"
+                                className="inline-flex items-center justify-center h-16 px-10 text-xl font-bold rounded-full gap-2 shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300 bg-primary hover:bg-primary/90 text-primary-foreground border border-primary/20"
+                            >
+                                Start Selling Now
                             </Link>
                         </div>
                     </div>
@@ -182,10 +183,11 @@ export default async function UseCasePage({ params }: { params: Promise<{ slug: 
             <section className="py-24">
                 <div className="container mx-auto px-4 text-center space-y-8">
                     <h2 className="text-3xl md:text-5xl font-bold">Ready to monetize your {platform.name} audience?</h2>
-                    <Link href="/">
-                        <Button className="h-16 px-10 text-xl rounded-full gap-2 shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300">
-                            Create {platform.name} Paywall
-                        </Button>
+                    <Link
+                        href="/"
+                        className="inline-flex items-center justify-center h-16 px-10 text-xl font-bold rounded-full gap-2 shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300 bg-primary hover:bg-primary/90 text-primary-foreground border border-primary/20"
+                    >
+                        Create {platform.name} Paywall
                     </Link>
                 </div>
             </section>

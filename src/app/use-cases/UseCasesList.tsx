@@ -194,11 +194,12 @@ export default function UseCasesList() {
                             JustUnlock works with ANY link or file. You don&apos;t need a specific integration to start selling.
                         </p>
                     </div>
-                    <div className="flex justify-center">
-                        <Link href="/">
-                            <Button className="w-auto h-14 px-8 text-lg rounded-full gap-2 shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 font-bold">
-                                Create Link Now
-                            </Button>
+                    <div className="flex justify-center w-full">
+                        <Link
+                            href="/"
+                            className="inline-flex items-center justify-center w-auto max-w-fit mx-auto h-14 px-8 text-lg font-bold rounded-full gap-2 shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 bg-primary hover:bg-primary/90 text-primary-foreground border border-primary/20"
+                        >
+                            Create Link Now
                         </Link>
                     </div>
                 </div>
