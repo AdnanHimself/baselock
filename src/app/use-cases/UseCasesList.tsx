@@ -191,7 +191,7 @@ export default function UseCasesList() {
                     <div className="space-y-4">
                         <h2 className="text-3xl md:text-5xl font-bold">Don&apos;t see your platform?</h2>
                         <p className="text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-                            JustUnlock works with ANY link or file. You don&apos;t need a specific integration to start selling.
+                            JustUnlock works with any link or supported file. You don&apos;t need a specific integration to start selling.
                         </p>
                     </div>
                     <div className="flex justify-center w-full">
