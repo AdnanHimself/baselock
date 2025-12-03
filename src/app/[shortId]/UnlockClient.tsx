@@ -163,7 +163,14 @@ export default function UnlockClient() {
 
     useEffect(() => {
         if (isConnected && address && linkData) {
-            checkAccess();
+            // If user is creator, auto-unlock or show button
+            if (address.toLowerCase() === linkData.receiver_address.toLowerCase()) {
+                // We can either auto-unlock or let them click "View as Creator"
+                // Let's check access automatically first
+                checkAccess();
+            } else {
+                checkAccess();
+            }
         }
     }, [isConnected, address, linkData, isSuccess]);
 
@@ -222,11 +229,18 @@ export default function UnlockClient() {
     };
 
     const checkAccess = async () => {
-        if (!address || !linkData || !publicClient) return;
+        if (!address || !linkData) return;
         setCheckingAccess(true);
         try {
-            // Check for past "Paid" events for this user and link
-            // This allows users to re-access content they've already paid for
+            // 1. Check if user is creator
+            if (address.toLowerCase() === linkData.receiver_address.toLowerCase()) {
+                await unlockContent('CREATOR_ACCESS');
+                return;
+            }
+
+            // 2. Check for past "Paid" events for this user and link
+            if (!publicClient) return;
+
             const logs = await publicClient.getLogs({
                 address: CONTRACT_ADDRESS,
                 event: {
@@ -386,6 +400,11 @@ export default function UnlockClient() {
                             {linkData.receiver_address.slice(0, 6)}...{linkData.receiver_address.slice(-4)}
                             <CheckCircle2 className="w-3 h-3" />
                         </a>
+                        {address && linkData.receiver_address.toLowerCase() === address.toLowerCase() && (
+                            <span className="ml-2 px-2 py-0.5 bg-yellow-500/20 text-yellow-500 rounded text-[10px] font-bold uppercase tracking-wider">
+                                You
+                            </span>
+                        )}
                     </div>
                 </div>
 

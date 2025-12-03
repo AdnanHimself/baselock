@@ -10,11 +10,11 @@ export async function POST(req: NextRequest) {
         let file: File | null = null;
 
         const contentTypeHeader = req.headers.get('content-type') || '';
-        console.log('[API] Content-Type:', contentTypeHeader);
+
 
         // Parse request body based on Content-Type
         if (contentTypeHeader.includes('multipart/form-data')) {
-            console.log('[API] Parsing multipart/form-data');
+
             const formData = await req.formData();
             slug = formData.get('slug') as string;
             title = formData.get('title') as string;
@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
             content_type = formData.get('content_type') as string;
             file = formData.get('file') as File;
         } else {
-            console.log('[API] Parsing JSON body');
+
             const body = await req.json();
             slug = body.slug;
             title = body.title;
@@ -33,7 +33,7 @@ export async function POST(req: NextRequest) {
             content_type = body.content_type;
         }
 
-        console.log('[API] Parsed Data:', { slug, title, price, receiver_address, content_type, hasFile: !!file, target_url });
+
 
         if (!slug || !price || !receiver_address) {
             console.error('[API] Missing required fields');
@@ -60,7 +60,7 @@ export async function POST(req: NextRequest) {
         // 0. Security: Verify Wallet Signature (DoS Protection)
         const signature = req.headers.get('x-signature');
         const address = req.headers.get('x-address');
-        console.log('[API] Verifying signature for address:', address);
+
 
         if (!signature || !address) {
             console.error('[API] Missing signature or address headers');
@@ -79,7 +79,7 @@ export async function POST(req: NextRequest) {
                 console.error('[API] Invalid signature');
                 return NextResponse.json({ error: 'Invalid wallet signature' }, { status: 401 });
             }
-            console.log('[API] Signature verified successfully');
+
         } catch (sigError) {
             console.error('[API] Signature verification failed:', sigError);
             return NextResponse.json({ error: 'Signature verification failed' }, { status: 401 });
@@ -87,7 +87,7 @@ export async function POST(req: NextRequest) {
 
         // Handle File Upload
         if ((content_type === 'file' || content_type === 'image') && file) {
-            console.log('[API] Processing file upload');
+
             // 1. Validate File Size (Max 4MB)
             const MAX_SIZE = 4 * 1024 * 1024; // 4MB
             if (file.size > MAX_SIZE) {
@@ -102,7 +102,7 @@ export async function POST(req: NextRequest) {
             // 2. Validate File Type (Magic Numbers)
             const { fileTypeFromBuffer } = await import('file-type');
             const type = await fileTypeFromBuffer(buffer);
-            console.log('[API] Detected file type:', type);
+
 
             const ALLOWED_MIMES = [
                 'image/jpeg', 'image/png', 'image/gif', 'image/webp',
@@ -115,7 +115,7 @@ export async function POST(req: NextRequest) {
             }
 
             const fileName = `${slug}/${crypto.randomUUID()}-${file.name.replace(/[^a-zA-Z0-9.-]/g, '_')}`;
-            console.log('[API] Uploading file to storage:', fileName);
+
 
             const { error: uploadError } = await supabaseAdmin.storage
                 .from('locked_content')
@@ -131,11 +131,11 @@ export async function POST(req: NextRequest) {
 
             uploadedFilePath = fileName;
             target_url = fileName;
-            console.log('[API] File uploaded successfully');
+
         }
 
         // 1. Insert public metadata into 'links' table
-        console.log('[API] Inserting link metadata');
+
         const { error: linkError } = await supabaseAdmin
             .from('links')
             .insert({
@@ -156,7 +156,7 @@ export async function POST(req: NextRequest) {
         }
 
         // 2. Insert private secret into 'secrets' table
-        console.log('[API] Inserting secret');
+
         const { error: secretError } = await supabaseAdmin
             .from('secrets')
             .insert({
@@ -174,7 +174,7 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: 'Failed to save secret: ' + secretError.message }, { status: 500 });
         }
 
-        console.log('[API] Link created successfully:', slug);
+
         return NextResponse.json({ success: true, slug });
 
     } catch (error: unknown) {

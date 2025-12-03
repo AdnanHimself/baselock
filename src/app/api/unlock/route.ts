@@ -21,6 +21,17 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
         }
 
+        // 1. Fetch Link Price and Receiver from Database (Moved up for creator check)
+        const { data: link, error: linkError } = await supabaseAdmin
+            .from('links')
+            .select('price, receiver_address, sales_count')
+            .eq('id', linkId)
+            .single();
+
+        if (linkError || !link) {
+            return NextResponse.json({ error: 'Link not found' }, { status: 404 });
+        }
+
         // 0. Verify Signature
         // Ensure the request comes from the user claiming to have paid
         const message = `Unlock content for link: ${linkId}`;
@@ -46,16 +57,7 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: 'Transaction already used' }, { status: 400 });
         }
 
-        // 1. Fetch Link Price and Receiver from Database
-        const { data: link, error: linkError } = await supabaseAdmin
-            .from('links')
-            .select('price, receiver_address, sales_count')
-            .eq('id', linkId)
-            .single();
 
-        if (linkError || !link) {
-            return NextResponse.json({ error: 'Link not found' }, { status: 404 });
-        }
 
         // 2. Verify Transaction on-chain
         const transaction = await publicClient.getTransactionReceipt({
@@ -198,36 +200,32 @@ export async function POST(req: NextRequest) {
             finalTargetUrl = signedData.signedUrl;
         }
 
-        // 5. Record Purchase and Update Stats
-        const { error: purchaseError } = await supabaseAdmin
-            .from('purchases')
-            .insert({
-                link_id: linkId,
-                buyer_address: userAddress,
-                amount: parseFloat(link.price.toString()), // Storing as USDC value for consistency in stats
-                token_address: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913', // Defaulting to USDC for now as price is in USDC. 
-                transaction_hash: txHash
-            });
+        // 5. Record Purchase and Update Stats (Only for real payments)
+        if (txHash !== 'CREATOR_ACCESS') {
+            const { error: purchaseError } = await supabaseAdmin
+                .from('purchases')
+                .insert({
+                    link_id: linkId,
+                    buyer_address: userAddress,
+                    amount: parseFloat(link.price.toString()),
+                    token_address: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913',
+                    transaction_hash: txHash
+                });
 
-        if (purchaseError) {
-            console.error('Error recording purchase:', purchaseError);
-        }
+            if (purchaseError) console.error('Error recording purchase:', purchaseError);
 
-        // Atomic increment using RPC
-        // We use a database function to safely increment the sales count without race conditions
-        const { error: rpcError } = await supabaseAdmin
-            .rpc('increment_sales_count', { row_id: linkId });
+            const { error: rpcError } = await supabaseAdmin
+                .rpc('increment_sales_count', { row_id: linkId });
 
-        if (rpcError) {
-            console.error('Error incrementing sales count:', rpcError);
-            // Fallback to manual update if RPC fails
-            await supabaseAdmin
-                .from('links')
-                .update({
-                    sales_count: (link.sales_count || 0) + 1,
-                    last_purchased_at: new Date().toISOString()
-                })
-                .eq('id', linkId);
+            if (rpcError) {
+                await supabaseAdmin
+                    .from('links')
+                    .update({
+                        sales_count: (link.sales_count || 0) + 1,
+                        last_purchased_at: new Date().toISOString()
+                    })
+                    .eq('id', linkId);
+            }
         }
 
         return NextResponse.json({
